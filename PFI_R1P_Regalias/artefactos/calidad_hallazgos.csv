@@ -1,0 +1,13 @@
+,valor
+Campos en la hoja principal,390
+Campos con Reservas 1P (presentes en el pronóstico 1P),320
+Campos con producción y sin Reservas 1P,70
+Nombres de campo duplicados,0
+Campos 1P sin atributos (completados desde la hoja del pronóstico 1P),5
+Diferencia máxima entre Reservas 1P de la hoja principal y la del pronóstico 1P (bl),0.0
+Valores de producción negativos o cero,0
+Celdas de producción vacías (campo sin reporte en el año),196
+Producción 2026 = solo enero-junio (181 días),Sí (fórmula de la columna diaria = /181)
+Mediana de producción real / Reservas 1P (2024-2025),0.949
+Casos con producción mayor a 2 veces la 1P del año,23
+Producción nacional 2025 / Reservas 1P 2025,1.029

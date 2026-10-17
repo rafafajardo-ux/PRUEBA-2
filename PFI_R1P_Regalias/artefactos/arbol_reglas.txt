@@ -1,0 +1,22 @@
+|--- log bpd año anterior <= 4.665
+|   |--- 1P año siguiente / 1P año <= 0.834
+|   |   |--- log 1P del año (bpd) <= 4.203
+|   |   |   |--- value: [-0.450]
+|   |   |--- log 1P del año (bpd) >  4.203
+|   |   |   |--- value: [-1.057]
+|   |--- 1P año siguiente / 1P año >  0.834
+|   |   |--- log 1P del año (bpd) <= 3.664
+|   |   |   |--- value: [-0.457]
+|   |   |--- log 1P del año (bpd) >  3.664
+|   |   |   |--- value: [-0.118]
+|--- log bpd año anterior >  4.665
+|   |--- brecha año anterior vs 1P <= -0.116
+|   |   |--- log bpd año anterior <= 7.154
+|   |   |   |--- value: [-0.081]
+|   |   |--- log bpd año anterior >  7.154
+|   |   |   |--- value: [0.125]
+|   |--- brecha año anterior vs 1P >  -0.116
+|   |   |--- log 1P del año (bpd) <= 7.773
+|   |   |   |--- value: [-0.165]
+|   |   |--- log 1P del año (bpd) >  7.773
+|   |   |   |--- value: [-0.064]

@@ -1,0 +1,32 @@
+{
+  "modelo_final": "Random Forest (ensamble de árboles)",
+  "hiperparametros": "{'max_depth': 8, 'max_features': 1.0, 'min_samples_leaf': 5}",
+  "cv_wape": 0.09582120288644459,
+  "cv_wape_desv": 0.019690616473979405,
+  "prueba_wape": 0.08448635121788982,
+  "prueba_sesgo": -0.030541405391615872,
+  "error_mediano_campo": 0.15238058723939335,
+  "umbral_alerta": 1.0,
+  "meta_cumplimiento": 0.9,
+  "segmentos_k": 5,
+  "red_mejor_epoca": 21,
+  "pca_varianza": [
+    0.3489566185501266,
+    0.26193442054715677
+  ],
+  "diferencial_brent_wti": 4.150000000000001,
+  "versiones": {
+    "python": "3.13.16",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "semilla": 42
+  },
+  "fecha_corte": "2026-06 (producción real)",
+  "filas_entrenamiento": {
+    "2024": 302,
+    "2025": 284,
+    "2026": 257
+  }
+}

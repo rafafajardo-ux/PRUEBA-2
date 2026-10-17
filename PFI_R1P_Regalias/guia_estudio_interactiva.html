@@ -1,0 +1,517 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Guía de estudio PFI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
+<style>
+/* Layout: índice lateral fijo + columna de lectura; mapas SVG a ancho completo con desplazamiento propio */
+:root{
+  --night:#0F1923; --navy:#1F3251; --gold:#C8973A; --gold-lt:#DEB86A; --cream:#F7F5F0; --stone:#6B7785; --line:#E2DDD6;
+  --bg:#F7F5F0; --surface:#FFFFFF; --fg:#1C1C1E; --muted:#5E6976; --head:#1F3251; --accent:#B07F25; --accent-soft:rgba(200,151,58,.14);
+  --node:#1F3251; --node-fg:#F7F5F0; --leaf:#FFFFFF; --leaf-fg:#1F3251; --edge:#9AA7B8; --chip:#EFEAE1; --s1:#1F3251;
+  --f-display:"Cormorant Garamond", Georgia, serif;
+  --f-body:"Arial Narrow","Archivo Narrow","Liberation Sans Narrow",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1923; --surface:#16222F; --fg:#ECE8E1; --muted:#A3AEBB; --head:#E9DFC9; --accent:#DEB86A; --accent-soft:rgba(222,184,106,.14);
+  --line:#2A3746; --node:#DEB86A; --node-fg:#0F1923; --leaf:#16222F; --leaf-fg:#ECE8E1; --edge:#55657A; --chip:#1E2C3B; --s1:#7E9CC6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1923; --surface:#16222F; --fg:#ECE8E1; --muted:#A3AEBB; --head:#E9DFC9; --accent:#DEB86A; --accent-soft:rgba(222,184,106,.14);
+  --line:#2A3746; --node:#DEB86A; --node-fg:#0F1923; --leaf:#16222F; --leaf-fg:#ECE8E1; --edge:#55657A; --chip:#1E2C3B; --s1:#7E9CC6; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+h1,h2,h3{color:var(--head);text-wrap:balance;line-height:1.15}
+h1{font-family:var(--f-display);font-size:clamp(2.2rem,5vw,3.4rem);margin:.2rem 0 .6rem;font-weight:700}
+h2{font-family:var(--f-display);font-size:clamp(1.7rem,3.4vw,2.3rem);margin:0 0 .5rem;font-weight:700}
+h3{font-size:1.18rem;margin:1.4rem 0 .4rem;font-weight:700}
+p{margin:.5rem 0}
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 18px);align-self:start;max-height:calc(100vh - 40px);overflow:auto;font-size:.95rem;border-right:1px solid var(--line);padding-right:16px}
+nav.toc .k{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+nav.toc a{display:block;color:var(--fg);text-decoration:none;padding:3px 0 3px 10px;border-left:2px solid transparent}
+nav.toc a:hover,nav.toc a.on{border-left-color:var(--gold);color:var(--accent)}
+nav.toc a.sub{padding-left:22px;font-size:.9rem;color:var(--muted)}
+main{min-width:0}
+.eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.lead{font-size:1.18rem;color:var(--muted);max-width:68ch}
+.terms{border:1px solid var(--line);border-left:4px solid var(--gold);background:var(--surface);padding:10px 14px;font-size:.92rem;border-radius:4px;margin:14px 0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}
+.stat{background:var(--surface);border:1px solid var(--line);padding:12px 14px;border-radius:4px}
+.stat b{display:block;font-size:1.65rem;color:var(--head);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:.88rem;color:var(--muted)}
+section{padding:34px 0 10px;border-top:1px solid var(--line);margin-top:30px}
+section.first{border-top:0;margin-top:0;padding-top:4px}
+.measure{max-width:72ch}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px;overflow-x:auto;margin:14px 0}
+.fig svg{display:block;width:100%;min-width:860px;height:auto}
+.fig.small svg{min-width:520px}
+.cap{font-size:.88rem;color:var(--muted);margin-top:4px}
+.mm-node{cursor:pointer}
+.mm-node rect{transition:opacity .15s}
+.dim .mm-node:not(.hl) {opacity:.28}
+.dim .mm-edge:not(.hl){opacity:.18}
+.steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;counter-reset:s;margin:14px 0}
+.steps a{display:block;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);padding:10px;border-radius:4px;font-size:.92rem;min-height:94px}
+.steps a::before{counter-increment:s;content:"Fase " counter(s);display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px}
+.steps a b{display:block;color:var(--head);font-size:1rem}
+.steps a:hover{border-color:var(--gold)}
+.qcp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.qcp div{background:var(--surface);border:1px solid var(--line);padding:12px;border-radius:4px;min-width:0}
+.qcp h4{margin:0 0 4px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.ex{background:var(--accent-soft);border-left:3px solid var(--gold);padding:10px 14px;margin:12px 0;border-radius:0 4px 4px 0}
+.ex::before{content:"Ejemplo";display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.tbl{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:.95rem;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+td.n,th.n{text-align:right}
+tr.best td{background:var(--accent-soft);font-weight:700}
+.formula{font-family:var(--f-body);background:var(--chip);padding:1px 6px;border-radius:3px;white-space:nowrap}
+.models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.model{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;min-width:0}
+.model h3{margin-top:0}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:20px;background:var(--chip);color:var(--muted);margin-right:4px}
+.tag.win{background:var(--gold);color:#0F1923;font-weight:700}
+.back{font-size:.85rem;margin-top:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:700;color:var(--head)}
+details p{margin:.5rem 0 0}
+.gloss{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 24px}
+.gloss dt{font-weight:700;color:var(--head);margin-top:8px}
+.gloss dd{margin:0;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:14px;font-size:.85rem;color:var(--muted)}
+@media (max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}nav.toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);padding:0 0 10px;columns:2}nav.toc .k{column-span:all}.steps{grid-template-columns:repeat(3,minmax(0,1fr))}.models{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.qcp{grid-template-columns:minmax(0,1fr)}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.gloss{grid-template-columns:minmax(0,1fr)}nav.toc{columns:1}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="k">Mapas</div>
+  <a href="#mapa-mental">Mapa mental</a>
+  <a href="#mapa-conceptual">Mapa conceptual</a>
+  <a href="#ruta">Ruta CRISP-DM</a>
+  <div class="k">Paso a paso</div>
+  <a href="#negocio">1. Negocio</a>
+  <a href="#datos">2. Datos</a>
+  <a href="#preparacion">3. Preparación sin fuga</a>
+  <a href="#modelos">4. Modelos</a>
+  <a class="sub" href="#arboles">Árboles de decisión</a>
+  <a class="sub" href="#lineal">Regresión lineal</a>
+  <a class="sub" href="#red">Redes neuronales</a>
+  <a href="#metricas">5. Métricas de calidad</a>
+  <a href="#evaluacion">6. Evaluación</a>
+  <a class="sub" href="#curva">Curva de aprendizaje</a>
+  <a class="sub" href="#umbral">Umbral y alertas</a>
+  <a href="#segmentos">7. Segmentos</a>
+  <a href="#pronostico">8. Pronóstico y regalías</a>
+  <a href="#aplicativo">9. Aplicativo</a>
+  <div class="k">Repaso</div>
+  <a href="#autoevaluacion">Autoevaluación</a>
+  <a href="#glosario">Glosario</a>
+</nav>
+
+<main>
+<section class="first" id="inicio">
+  <div class="eyebrow">Guía de estudio · Proyecto Final Integrador</div>
+  <h1>Reservas 1P y regalías de petróleo en Colombia</h1>
+  <p class="lead">¿Cómo se comporta la producción anual y diaria de las Reservas 1P de Colombia y cuánto se espera recibir por regalías cada año, según WTI y Brent? Esta guía recorre el ejercicio paso a paso. Cada nodo de los mapas lleva a su explicación.</p>
+  <div class="stats">
+    <div class="stat"><b>Random Forest</b><span>Modelo final (ensamble de árboles)</span></div>
+    <div class="stat"><b>8,4 %</b><span>Error por campo en la prueba 2026 (WAPE)</span></div>
+    <div class="stat"><b>25,4 %</b><span>Error si se usa la 1P tal cual</span></div>
+    <div class="stat"><b>724 mil</b><span>Barriles por día pronosticados para 2026</span></div>
+  </div>
+  <div class="terms"><b>Términos y condiciones.</b> Datos de carácter reservado, con un único uso académico en la Especialización en Machine Learning de la Universidad EAN (2026). Prohibido el uso, la distribución, la copia o la mejora, total o parcial. Solo se usa el pronóstico de desarrollo de reservas del IRR 2024, sin migración de reservas 2P y 3P ni evolución de recursos contingentes.</div>
+</section>
+
+<section id="mapa-mental">
+  <div class="eyebrow">Mapa mental</div>
+  <h2>Todo el proyecto en una vista</h2>
+  <p class="measure">El centro es la pregunta. Cada rama es una parte del trabajo y cada hoja un concepto clave. Pase el cursor por una rama para resaltarla; haga clic en cualquier nodo para ir a su explicación.</p>
+  <div class="fig" id="mm"><svg id="mm-svg" viewBox="0 0 1120 820" role="img" aria-label="Mapa mental del proyecto"></svg></div>
+</section>
+
+<section id="mapa-conceptual">
+  <div class="eyebrow">Mapa conceptual</div>
+  <h2>Cómo se conectan los conceptos</h2>
+  <p class="measure">Se lee siguiendo las flechas: cada flecha dice qué relación hay entre dos conceptos. Por ejemplo: <i>Excel → contiene → Reservas 1P, 2P y 3P → aportan → Variables ex ante → describen → Conjunto campo-año → entrena → Modelos</i>.</p>
+  <div class="fig" id="cm"><svg id="cm-svg" viewBox="0 0 1030 730" role="img" aria-label="Mapa conceptual del proyecto"></svg></div>
+</section>
+
+<section id="ruta">
+  <div class="eyebrow">Ruta</div>
+  <h2>Las seis fases de CRISP-DM</h2>
+  <p class="measure">CRISP-DM es el método estándar para proyectos de analítica. Las fases no son estrictamente lineales: en este proyecto, la evaluación obligó a volver a la preparación para cambiar el objetivo del modelo.</p>
+  <div class="steps">
+    <a href="#negocio"><b>Comprensión del negocio</b>Decisión, métrica de éxito, alcance</a>
+    <a href="#datos"><b>Comprensión de los datos</b>Excel de 4 hojas, calidad</a>
+    <a href="#preparacion"><b>Preparación</b>Conjunto campo-año, variables, sin fuga</a>
+    <a href="#modelos"><b>Modelado</b>Árboles, regresión lineal, red neuronal</a>
+    <a href="#evaluacion"><b>Evaluación</b>Prueba 2026, umbral, segmentos</a>
+    <a href="#aplicativo"><b>Despliegue</b>Aplicativo local y documentos</a>
+  </div>
+</section>
+
+<section id="negocio">
+  <div class="eyebrow">Paso 1 · Comprensión del negocio</div>
+  <h2>Qué decisión se apoya</h2>
+  <div class="qcp">
+    <div><h4>Qué se hizo</h4>Se tradujo la pregunta en una decisión: cuántos barriles y cuántas regalías incluir por año en la planeación del Sistema General de Regalías, y dónde hay riesgo de quedar por debajo.</div>
+    <div><h4>Quién decide</h4>Ministerio de Minas y Energía, ANH y DNP. Afecta a departamentos y municipios productores, a quienes formulan proyectos con regalías y a los operadores.</div>
+    <div><h4>Por qué así</h4>Un modelo solo sirve si cambia una decisión. Definirla primero permitió escoger la métrica correcta (error en barriles) y la regla del tope 1P.</div>
+  </div>
+  <h3>Métricas de éxito definidas antes de modelar</h3>
+  <ol class="measure">
+    <li>Error por campo (<a href="#m-wape">WAPE</a>) menor que el de usar la Reserva 1P tal cual.</li>
+    <li><a href="#m-sesgo">Sesgo del total país</a> menor a ±5 %.</li>
+    <li>Desde 2027 el pronóstico nunca supera la Reserva 1P del año.</li>
+  </ol>
+  <h3>Alcance</h3>
+  <p class="measure">Solo el pronóstico de desarrollo de reservas del <b>IRR 2024</b> (Informe de Recursos y Reservas, corte al 31 de diciembre de 2023). No se modela la migración de reservas 2P y 3P a probadas ni la evolución de recursos contingentes. Por eso la senda desde 2027 es un piso conservador.</p>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="datos">
+  <div class="eyebrow">Paso 2 · Comprensión de los datos</div>
+  <h2>Un Excel, cuatro hojas</h2>
+  <div class="tbl"><table>
+    <tr><th>Hoja</th><th>Contenido</th><th>Uso</th></tr>
+    <tr><td>1P_Oil_final_val_col_abr29 2024</td><td>390 campos: atributos, producción 2023 a junio de 2026, Reservas 1P 2024-2060</td><td>Fuente principal</td></tr>
+    <tr><td>Petróleo_1P Pronóstico</td><td>Operador, contrato y 1P de 320 campos</td><td>Verificar la 1P y completar operadora</td></tr>
+    <tr><td>Petróleo_Prb</td><td>Reservas probables (2P) por año</td><td>Variable de potencial</td></tr>
+    <tr><td>Petróleo_Ps</td><td>Reservas posibles (3P) por año</td><td>Variable de potencial</td></tr>
+  </table></div>
+  <h3>Diagnóstico de calidad</h3>
+  <div class="tbl"><table>
+    <tr><th>Indicador</th><th class="n">Valor</th><th>Decisión</th></tr>
+    <tr><td>Nombres de campo duplicados</td><td class="n">0</td><td>El nombre del campo sirve como llave</td></tr>
+    <tr><td>Diferencia entre la 1P de las dos hojas</td><td class="n">0 bl</td><td>Confianza en el archivo</td></tr>
+    <tr><td>Celdas de producción vacías</td><td class="n">196</td><td>Se excluyen; no se tratan como cero (son cierres o unificaciones)</td></tr>
+    <tr><td>Campos con producción y sin 1P</td><td class="n">70</td><td>Se usan hasta 2026; no se pronostican después</td></tr>
+    <tr><td>Producción 2026</td><td class="n">181 días</td><td>Es enero-junio: se compara en barriles por día</td></tr>
+    <tr><td>Mediana producción real / 1P (2024-2025)</td><td class="n">0,95</td><td>La 1P es buen punto de partida, con mucha dispersión</td></tr>
+    <tr><td>Producción 2027-2060 del Excel</td><td class="n">= 1P</td><td>Son fórmulas, no observaciones: no se usan para aprender</td></tr>
+  </table></div>
+  <p class="measure">Precios: promedios anuales de los precios spot mensuales de la EIA (Brent RBRTE y WTI RWTC). 2026 = enero-septiembre (Brent 93,27; WTI 84,98 USD/bl); 2027 = proyección EIA STEO (Brent 84); desde 2028, supuesto constante y editable en el aplicativo.</p>
+  <p class="back"><a href="#mapa-conceptual">↑ Volver al mapa conceptual</a></p>
+</section>
+
+<section id="preparacion">
+  <div class="eyebrow">Paso 3 · Preparación</div>
+  <h2>Qué se predice y cómo se evita la fuga</h2>
+  <p class="measure"><b>Unidad:</b> un campo en un año objetivo t (2024, 2025 o 2026). Resultado: 302 filas para 2024, 284 para 2025 y 257 para 2026.</p>
+  <p class="measure"><b>Objetivo:</b> el cambio logarítmico de la producción diaria, <span class="formula">y = log(bpd<sub>t</sub> / bpd<sub>t−1</sub>)</span>. Un 0 significa que se mantiene; −0,10, una caída de cerca de 10 %.</p>
+  <div class="ex">Primero se intentó predecir el nivel de producción y ningún modelo superó a la persistencia (repetir el año anterior). Al predecir el cambio, el modelo parte de la persistencia y aprende cuándo se aparta de ella. Este cambio se decidió solo con la validación cruzada, sin mirar la prueba 2026.</div>
+  <h3>Variables (todas conocidas antes del año objetivo)</h3>
+  <div class="tbl"><table>
+    <tr><th>Variable</th><th>Cálculo</th><th>Por qué</th></tr>
+    <tr><td>log bpd año anterior</td><td>log(1 + bpd<sub>t−1</sub>)</td><td>Los campos pequeños declinan más rápido</td></tr>
+    <tr><td>log 1P del año</td><td>log(1 + 1P<sub>t</sub>/días)</td><td>Dato óptimo proyectado</td></tr>
+    <tr><td>brecha año anterior vs 1P</td><td>log bpd<sub>t−1</sub> − log 1P<sub>t</sub></td><td>Si el campo va por encima o por debajo de su plan</td></tr>
+    <tr><td>1P año siguiente / 1P año</td><td>1P<sub>t+1</sub> / 1P<sub>t</sub></td><td>Velocidad de declive esperada</td></tr>
+    <tr><td>años restantes de 1P · reservas 1P / 1P del año</td><td>último año con 1P − t · suma 1P / 1P<sub>t</sub></td><td>Madurez del campo</td></tr>
+    <tr><td>log reservas probables y posibles</td><td>log(1 + 2P o 3P / 365)</td><td>Potencial adicional</td></tr>
+    <tr><td>tipo de contrato, departamento, operadora</td><td>one-hot</td><td>Diferencias contractuales y geológicas</td></tr>
+  </table></div>
+  <h3 id="fuga">Cuatro barreras contra la fuga de información</h3>
+  <ol class="measure">
+    <li>La producción del año objetivo nunca entra como variable.</li>
+    <li>La 1P, 2P y 3P vienen del IRR 2024 (corte 31-dic-2023), anterior a todos los años objetivo.</li>
+    <li><b>Validación cruzada agrupada por campo</b> (GroupKFold, 5 pliegues): un campo nunca está a la vez en entrenamiento y validación.</li>
+    <li>2026 queda guardado como prueba y se usa una sola vez, al final.</li>
+  </ol>
+  <div class="fig small"><svg id="gkf-svg" viewBox="0 0 690 200" style="max-width:720px" role="img" aria-label="Esquema de validación cruzada agrupada por campo"></svg></div>
+  <p class="cap">Cada fila es un pliegue: en dorado, el quinto de los campos que se usa para validar; en azul, los que entrenan. Los años 2024 y 2025 de un mismo campo siempre van juntos.</p>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="modelos">
+  <div class="eyebrow">Paso 4 · Modelado</div>
+  <h2>Tres familias de modelos supervisados</h2>
+  <p class="measure">Cada modelo predice el cambio logarítmico y lo convierte en barriles: <span class="formula">bpd<sub>t</sub> = bpd<sub>t−1</sub> × e<sup>ŷ</sup> × S</span>, donde S es el factor de <i>smearing</i> de Duan que corrige el sesgo de volver de logaritmos. Los hiperparámetros se eligieron con búsqueda en malla sobre los mismos 5 pliegues.</p>
+  <div class="models">
+    <div class="model" id="arboles">
+      <h3>Árboles de decisión</h3>
+      <span class="tag win">Familia ganadora</span>
+      <p>Dividen los campos con preguntas sí/no. El <b>árbol</b> individual (profundidad 3) es interpretable. El <b><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">Random Forest</a></b> promedia 500 árboles (profundidad 8, hoja mínima 5). <b>Gradient Boosting</b> suma árboles que corrigen errores.</p>
+      <p><b>Resultado:</b> Random Forest 9,6 % ± 2,0 en validación cruzada; 8,4 % en la prueba.</p>
+      <div class="ex">Un campo con 2.000 bpd el año anterior y una 1P de 1.800 bpd cae en la hoja de valor −0,17: e<sup>−0,17</sup> − 1 ≈ −16 %, unos 1.690 bpd.</div>
+    </div>
+    <div class="model" id="lineal">
+      <h3>Regresión lineal</h3>
+      <span class="tag">MCO y Ridge</span>
+      <p>Suma el efecto de cada variable con un peso fijo. <b><a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html">Ridge</a></b> (α = 30) encoge los coeficientes para evitar sobreajuste; aquí dio casi lo mismo que MCO.</p>
+      <p><b>Resultado:</b> 13,1 % en validación cruzada, pero la mejor validación temporal (9,9 %) y sesgo casi nulo.</p>
+      <div class="ex">El coeficiente de «log reservas probables» es +0,062: una desviación estándar más de probables eleva el cambio esperado en e<sup>0,062</sup> − 1 ≈ +6,4 %.</div>
+    </div>
+    <div class="model" id="red">
+      <h3>Redes neuronales</h3>
+      <span class="tag">Perceptrón multicapa</span>
+      <p>Capas de neuronas (64 y 32, ReLU, Adam, α = 0,001) que combinan variables de forma no lineal. Necesitan muchos datos; aquí hay 586 filas de entrenamiento.</p>
+      <p><b>Resultado:</b> 13,4 % en validación cruzada; 10,6 % en la prueba. Sobreajusta pronto (ver la <a href="#curva">curva de aprendizaje</a>).</p>
+      <div class="ex">Hasta la época 21 los errores de entrenamiento y prueba bajan juntos; luego el de entrenamiento sigue bajando y el de prueba sube: memoriza.</div>
+    </div>
+  </div>
+  <h3>Informe: ¿cuál es el mejor modelo?</h3>
+  <p class="measure">Regla fijada antes de ver la prueba: <b>gana el menor WAPE en validación cruzada agrupada por campo</b>. Las líneas base (gris) son la referencia.</p>
+  <div class="fig"><svg id="bar-svg" viewBox="0 0 900 440" role="img" aria-label="Error WAPE por modelo en validación cruzada y prueba"></svg></div>
+  <p class="cap">Barra superior: validación cruzada 2024-2025 (decide). Barra inferior: prueba 2026 (confirma). Menos es mejor.</p>
+  <p class="measure"><b>Veredicto: Random Forest.</b> Menor error en validación cruzada y confirmado en la prueba, con sesgo de −3,1 %. Reduce el error de la 1P a un tercio. La persistencia logra 8,1 % en un solo semestre de prueba, pero 11,9 % en validación cruzada; el modelo aporta al seguir el declive de la 1P en los años siguientes.</p>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="metricas">
+  <div class="eyebrow">Paso 5 · Métricas de calidad</div>
+  <h2>Qué mide cada métrica y cuándo importa</h2>
+  <div class="tbl"><table>
+    <tr><th>Métrica</th><th>Fórmula</th><th>Qué dice</th><th class="n">Random Forest (prueba)</th><th class="n">1P tal cual</th></tr>
+    <tr id="m-wape"><td><b>WAPE</b></td><td><span class="formula">Σ|pron − real| / Σ real</span></td><td>Error en barriles, ponderado por tamaño. Métrica principal.</td><td class="n">8,4 %</td><td class="n">25,4 %</td></tr>
+    <tr id="m-sesgo"><td><b>Sesgo total</b></td><td><span class="formula">Σ pron / Σ real − 1</span></td><td>Si el total país se sobre o subestima. Positivo = se promete dinero que no llega.</td><td class="n">−3,1 %</td><td class="n">−8,7 %</td></tr>
+    <tr><td><b>MAE</b></td><td><span class="formula">promedio |pron − real|</span></td><td>Error medio por campo en bpd</td><td class="n">229 bpd</td><td class="n">688 bpd</td></tr>
+    <tr><td><b>RMSE</b></td><td><span class="formula">√ promedio (pron − real)²</span></td><td>Castiga más los errores grandes</td><td class="n">608 bpd</td><td class="n">1.667 bpd</td></tr>
+    <tr><td><b>R² (log)</b></td><td><span class="formula">1 − SSE / SST</span></td><td>Variación explicada en escala logarítmica</td><td class="n">0,926</td><td class="n">0,706</td></tr>
+    <tr><td><b>% campos con error &gt; 20 %</b></td><td><span class="formula">#(|e|/real &gt; 0,2) / n</span></td><td>Cuántos campos quedarían mal programados</td><td class="n">42 %</td><td class="n">68 %</td></tr>
+    <tr id="m-alerta"><td><b>Sensibilidad · Precisión · AUC</b></td><td><span class="formula">VP/(VP+FN) · VP/(VP+FP)</span></td><td>Calidad de la alerta de bajo cumplimiento</td><td class="n">0,94 · 0,69 · 0,93</td><td class="n">—</td></tr>
+    <tr id="m-silueta"><td><b>Silueta</b></td><td><span class="formula">(b − a) / máx(a, b)</span></td><td>Separación de los segmentos (−1 a 1)</td><td class="n">0,33 (k = 5)</td><td class="n">—</td></tr>
+  </table></div>
+  <div class="ex">Tres campos producen 1.000, 500 y 100 bpd y el modelo dice 950, 550 y 70. Errores absolutos: 50 + 50 + 30 = 130. WAPE = 130 / 1.600 = <b>8,1 %</b>. Sesgo = 1.570 / 1.600 − 1 = <b>−1,9 %</b>. El campo de 100 bpd tiene 30 % de error propio, pero pesa poco en barriles.</div>
+  <p class="back"><a href="#mapa-conceptual">↑ Volver al mapa conceptual</a></p>
+</section>
+
+<section id="evaluacion">
+  <div class="eyebrow">Paso 6 · Evaluación</div>
+  <h2>Prueba ciega, curva de aprendizaje y umbral</h2>
+  <div class="tbl"><table>
+    <tr><th>Partición</th><th>Entrena</th><th>Evalúa</th><th>Para qué</th></tr>
+    <tr><td>Validación cruzada</td><td>2024-2025, 4/5 de los campos</td><td>1/5 de los campos</td><td>Hiperparámetros y elección</td></tr>
+    <tr><td>Validación temporal</td><td>2024</td><td>2025</td><td>Estabilidad; elección del umbral</td></tr>
+    <tr><td>Prueba final</td><td>2024-2025</td><td>2026 (ene-jun)</td><td>Una sola vez, para confirmar</td></tr>
+  </table></div>
+  <h3 id="curva">Curva de aprendizaje de la red neuronal</h3>
+  <div class="fig small"><svg id="lc-svg" viewBox="0 0 720 330" style="max-width:860px" role="img" aria-label="Curva de aprendizaje: entrenamiento, validación y prueba"></svg></div>
+  <p class="cap">Error cuadrático medio ponderado del cambio logarítmico, época a época. La línea punteada marca la mejor época en validación (21).</p>
+  <p class="measure"><b>Cómo leerla:</b> si las curvas de entrenamiento y prueba bajan juntas, la red aprende patrones generales. Cuando la de entrenamiento sigue bajando (0,006 en la época 400) y la de prueba sube (0,206), la red memoriza: es sobreajuste. La validación, no la prueba, decide dónde parar.</p>
+  <h3 id="umbral">Umbral de alerta de bajo cumplimiento</h3>
+  <p class="measure">Un campo <b>incumple</b> si produce menos del 90 % de su 1P. Se emite alerta si el cumplimiento pronosticado (pronóstico / 1P) es menor a <b>1,00</b>. El umbral se eligió en 2025 minimizando un costo en el que no detectar un incumplimiento cuesta 3 veces una falsa alarma.</p>
+  <div class="ex">En la prueba 2026 hubo 103 incumplimientos reales y 140 alertas. Sensibilidad 0,94: de cada 100 campos que incumplieron, la alerta detectó 94. Precisión 0,69: de cada 100 alertas, 69 fueron incumplimientos reales. En 2027, CAÑO SUR ESTE tiene 1P de 18,7 millones de bl y pronóstico de 18,0: cumplimiento 0,97, alerta.</div>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="segmentos">
+  <div class="eyebrow">Paso 7 · Aprendizaje no supervisado</div>
+  <h2>Segmentos de campos con K-medias</h2>
+  <p class="measure">Cada campo se describe con seis variables estandarizadas (tamaño, cambio 2025/2024, cumplimiento 1P 2025, declive 1P 2026-2030, años restantes de 1P y peso de las probables). Se probaron k = 2 a 7 con <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html">K-medias</a> y con agrupamiento jerárquico de Ward; k = 5 tuvo la mejor <a href="#m-silueta">silueta</a> (0,33).</p>
+  <div class="tbl"><table>
+    <tr><th>Segmento</th><th class="n">Campos</th><th>Lectura</th></tr>
+    <tr><td>S1: Grandes de vida 1P larga</td><td class="n">50</td><td>Sostienen la producción de largo plazo</td></tr>
+    <tr><td>S2: Medianos de vida 1P corta</td><td class="n">76</td><td>Explican la caída después de 2027</td></tr>
+    <tr><td>S3: Medianos con potencial probable</td><td class="n">21</td><td>Candidatos a migración 2P (fuera del alcance)</td></tr>
+    <tr><td>S4: Pequeños por debajo de su 1P en declive</td><td class="n">19</td><td>Concentran el riesgo de incumplimiento</td></tr>
+    <tr><td>S5: Medianos</td><td class="n">121</td><td>Comportamiento típico</td></tr>
+  </table></div>
+  <h3>Qué significan los componentes 1 y 2</h3>
+  <p class="measure"><b>Componente 1 (35 %): tamaño y desempeño frente a la 1P.</b> Alto en campos grandes, estables y que cumplen su 1P. <b>Componente 2 (26 %): horizonte de la 1P.</b> Alto en campos con muchos años de 1P y declive suave.</p>
+  <div class="ex">CASTILLA queda arriba a la derecha: grande (unos 55 mil bpd), cumple su 1P (1,13) y le quedan 22 años. CARMENTEA queda en el extremo izquierdo: menos de un barril diario y cumplimiento de 0,01.</div>
+  <p class="back"><a href="#mapa-conceptual">↑ Volver al mapa conceptual</a></p>
+</section>
+
+<section id="pronostico">
+  <div class="eyebrow">Paso 8 · Despliegue del modelo</div>
+  <h2>Pronóstico 2026-2060 y regalías</h2>
+  <ol class="measure">
+    <li>Se reentrena el Random Forest con 2024, 2025 y 2026.</li>
+    <li><b>2026</b> = real enero-junio + pronóstico julio-diciembre (184 días).</li>
+    <li><b>Desde 2027</b>, año a año: el pronóstico del año previo es el «año anterior» del siguiente.</li>
+    <li><b>Tope:</b> pronóstico = mínimo entre el modelo y la 1P del año. Sin 1P, el campo no se pronostica y se informa su último año con 1P.</li>
+  </ol>
+  <h3 id="regalias">Regalías: escala de la Ley 756 de 2002</h3>
+  <div class="tbl"><table>
+    <tr><th>Producción del campo</th><th>Tasa</th></tr>
+    <tr><td>Hasta 5.000 bpd</td><td>8 %</td></tr>
+    <tr><td>5.000 a 125.000 bpd</td><td>8 % + 0,1 puntos por cada 1.000 bpd adicionales</td></tr>
+    <tr><td>125.000 a 400.000 bpd</td><td>20 %</td></tr>
+    <tr><td>400.000 a 600.000 bpd</td><td>20 % + 0,025 puntos por cada 1.000 bpd</td></tr>
+    <tr><td>Más de 600.000 bpd</td><td>25 %</td></tr>
+  </table></div>
+  <p class="measure"><span class="formula">Regalías (bl) = producción × tasa</span> · <span class="formula">Regalías (USD) = regalías (bl) × WTI o Brent</span> · <span class="formula">Pronosticado = Reservas 1P × precio</span></p>
+  <div class="tbl"><table>
+    <tr><th>Año</th><th class="n">Miles bpd</th><th class="n">Producción (M bl)</th><th class="n">Reservas 1P (M bl)</th><th class="n">Regalías (M bl)</th></tr>
+    <tr><td>2025 (real)</td><td class="n">746</td><td class="n">272,5</td><td class="n">264,9</td><td class="n">28,8</td></tr>
+    <tr><td>2026</td><td class="n">724</td><td class="n">264,2</td><td class="n">238,9</td><td class="n">27,9</td></tr>
+    <tr><td>2027</td><td class="n">535</td><td class="n">195,3</td><td class="n">212,5</td><td class="n">20,2</td></tr>
+    <tr><td>2030</td><td class="n">328</td><td class="n">119,5</td><td class="n">124,7</td><td class="n">11,7</td></tr>
+    <tr><td>2035</td><td class="n">123</td><td class="n">44,7</td><td class="n">48,2</td><td class="n">4,1</td></tr>
+  </table></div>
+  <div class="ex">2026: 27,9 millones de barriles de regalías × 84,98 USD/bl (WTI) ≈ USD 2.368 millones; a Brent (93,27) ≈ USD 2.599 millones.</div>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="aplicativo">
+  <div class="eyebrow">Paso 9 · Despliegue</div>
+  <h2>El aplicativo local</h2>
+  <p class="measure">Doble clic en <b>iniciar_app.command</b> (Mac) o <span class="formula">streamlit run app/app.py</span>; se abre en http://localhost:8501.</p>
+  <div class="tbl"><table>
+    <tr><th>Página</th><th>Qué hace</th></tr>
+    <tr><td>Términos y condiciones</td><td>Pantalla obligatoria: hay que aceptarlos para entrar</td></tr>
+    <tr><td>Consulta</td><td>Año 2023-2060; total país, campo, departamento, municipio, operadora o tipo de contrato; WTI o Brent; producción, bpd, 1P, regalías en bl y USD; informe Excel</td></tr>
+    <tr><td>Modelos</td><td>Informe del mejor modelo; árboles de decisión; regresión lineal; redes neuronales con curva de aprendizaje; ejemplos de interpretación</td></tr>
+    <tr><td>Umbral y alertas</td><td>Campos con cumplimiento pronosticado bajo 1,00 por año</td></tr>
+    <tr><td>Segmentos</td><td>Mapa de segmentos y significado de los componentes</td></tr>
+    <tr><td>Datos y precios</td><td>Precios editables, calidad y ficha de datos</td></tr>
+  </table></div>
+  <p class="back"><a href="#mapa-mental">↑ Volver al mapa mental</a></p>
+</section>
+
+<section id="autoevaluacion">
+  <div class="eyebrow">Repaso</div>
+  <h2>Autoevaluación</h2>
+  <details><summary>¿Por qué se predice el cambio y no el nivel de producción?</summary><p>Porque el nivel es muy persistente: con él ningún modelo superaba a repetir el año anterior. Con el cambio, el modelo parte de la persistencia y aprende cuándo se aparta. <a href="#preparacion">Ver paso 3</a>.</p></details>
+  <details><summary>¿Qué fuga evita la validación cruzada agrupada por campo?</summary><p>Que un mismo campo esté en entrenamiento (2024) y en validación (2025): el modelo lo «recordaría» y el error parecería menor. <a href="#fuga">Ver barreras</a>.</p></details>
+  <details><summary>¿Por qué WAPE y no el error porcentual promedio?</summary><p>Porque el negocio mide barriles: un error de 1.000 bpd pesa igual en un campo grande o pequeño, y los campos pequeños con errores porcentuales enormes no dominan la métrica. <a href="#m-wape">Ver WAPE</a>.</p></details>
+  <details><summary>¿Por qué ganó Random Forest si la persistencia tuvo 8,1 % en la prueba?</summary><p>La regla de elección es la validación cruzada (9,6 % frente a 11,9 %). La prueba es un solo semestre y la diferencia está dentro de la variabilidad. Además, el modelo incorpora el declive de la 1P. <a href="#modelos">Ver informe</a>.</p></details>
+  <details><summary>¿Qué indica que la red neuronal sobreajusta?</summary><p>Que su error de entrenamiento sigue bajando mientras el de validación y prueba sube después de la época 21. <a href="#curva">Ver curva</a>.</p></details>
+  <details><summary>¿Por qué el umbral de alerta es 1,00 y no 0,90?</summary><p>Porque no detectar un incumplimiento cuesta 3 veces una falsa alarma; con ese costo, 1,00 fue el mínimo en 2025 y detectó 94 % en 2026. <a href="#umbral">Ver umbral</a>.</p></details>
+  <details><summary>¿Qué no incluye el pronóstico después de 2027?</summary><p>La migración de reservas 2P y 3P a probadas y la evolución de recursos contingentes. Solo el pronóstico del IRR 2024, con tope en la 1P. <a href="#negocio">Ver alcance</a>.</p></details>
+  <details><summary>¿Cómo se pasa de barriles a dólares de regalías?</summary><p>Producción × tasa de la Ley 756 (según bpd del campo) = barriles de regalía; × precio promedio anual WTI o Brent = USD. <a href="#regalias">Ver regalías</a>.</p></details>
+</section>
+
+<section id="glosario">
+  <div class="eyebrow">Repaso</div>
+  <h2>Glosario</h2>
+  <dl class="gloss">
+    <div><dt>Reservas 1P (probadas)</dt><dd>Volumen que se espera producir con alta certeza; aquí, el perfil anual por campo 2024-2060 del IRR 2024.</dd></div>
+    <div><dt>Reservas 2P / 3P</dt><dd>Probables y posibles: volúmenes adicionales con menor certeza.</dd></div>
+    <div><dt>bpd</dt><dd>Barriles por día.</dd></div>
+    <div><dt>Persistencia</dt><dd>Línea base que repite la producción del año anterior.</dd></div>
+    <div><dt>Hiperparámetro</dt><dd>Ajuste del modelo que se fija antes de entrenar (profundidad, α, capas).</dd></div>
+    <div><dt>Fuga de información</dt><dd>Usar sin querer información que no se conocería al pronosticar.</dd></div>
+    <div><dt>Smearing de Duan</dt><dd>Factor que corrige el sesgo al volver de logaritmos a barriles.</dd></div>
+    <div><dt>Época</dt><dd>Una pasada completa de la red neuronal por los datos de entrenamiento.</dd></div>
+    <div><dt>Componente principal</dt><dd>Combinación de variables que resume la mayor variación posible.</dd></div>
+    <div><dt>WTI / Brent</dt><dd>Precios internacionales de referencia del petróleo, en USD por barril.</dd></div>
+  </dl>
+</section>
+
+<footer>Guía de estudio del PFI · Rafael Fajardo Moreno · Integrantes: [completar] · Octubre de 2026. Uso exclusivamente académico (Especialización en Machine Learning, Universidad EAN, 2026). Datos de carácter reservado: prohibido su uso, distribución, copia o mejora total o parcial. Referencias: <a href="https://scikit-learn.org/stable/modules/cross_validation.html#group-k-fold">scikit-learn, GroupKFold</a> · <a href="https://www.eia.gov/dnav/pet/pet_pri_spt_s1_m.htm">EIA, precios spot</a> · <a href="http://www.secretariasenado.gov.co/senado/basedoc/ley_0756_2002.html">Ley 756 de 2002</a>.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function link(parent,href){const a=el("a",{href},parent);a.addEventListener("click",ev=>{ev.preventDefault();const t=document.querySelector(href);if(t)t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});history.replaceState(null,"",href)});return a}
+function label(g,x,y,lines,o={}){const t=el("text",{x,y,"text-anchor":o.anchor||"middle","font-size":o.size||14,"font-weight":o.weight||400,fill:o.fill||"var(--fg)","font-family":"var(--f-body)"},g);
+  const lh=(o.size||14)*1.15, y0=y-(lines.length-1)*lh/2;lines.forEach((s,i)=>{const ts=el("tspan",{x,y:y0+i*lh,dy:"0.35em"},t);ts.textContent=s});return t}
+
+/* ---------- Mapa mental radial ---------- */
+const MM=[
+ ["Negocio","#negocio",["Decisión: presupuesto SGR","Métricas de éxito","Alcance IRR 2024"]],
+ ["Datos","#datos",["Excel de 4 hojas","390 campos","196 celdas vacías"]],
+ ["Preparación","#preparacion",["Objetivo: cambio log","Variables ex ante","Sin fuga: GroupKFold"]],
+ ["Árboles de decisión","#arboles",["Árbol (profundidad 3)","Random Forest ★","Gradient Boosting"]],
+ ["Regresión lineal","#lineal",["MCO","Ridge α = 30","Coeficientes"]],
+ ["Redes neuronales","#red",["MLP 64-32","Curva de aprendizaje","Parada temprana"]],
+ ["Métricas","#metricas",["WAPE","Sesgo total","MAE · RMSE · R²"]],
+ ["Evaluación","#evaluacion",["Prueba 2026","Umbral 1,00","Sensibilidad 94 %"]],
+ ["Segmentos","#segmentos",["K-medias k = 5","Silueta 0,33","Componentes 1 y 2"]],
+ ["Pronóstico y regalías","#pronostico",["Tope 1P desde 2027","Ley 756 de 2002","WTI · Brent"]],
+ ["Aplicativo","#aplicativo",["Términos y condiciones","Consulta","Modelos y alertas"]]];
+const LEAFLINK={"Métricas de éxito":"#negocio","Alcance IRR 2024":"#negocio","Sin fuga: GroupKFold":"#fuga","Curva de aprendizaje":"#curva","Parada temprana":"#curva","WAPE":"#m-wape","Sesgo total":"#m-sesgo","Umbral 1,00":"#umbral","Sensibilidad 94 %":"#m-alerta","Silueta 0,33":"#m-silueta","Ley 756 de 2002":"#regalias","WTI · Brent":"#regalias"};
+const svg=document.getElementById("mm-svg"),cx=560,cy=410;
+const gE=el("g",{},svg),gN=el("g",{},svg);
+const derecha=MM.slice(0,6),izquierda=MM.slice(6);
+[[derecha,1],[izquierda,-1]].forEach(([lista,lado])=>{
+ const paso=780/lista.length;
+ lista.forEach((b,k)=>{
+  const i=MM.indexOf(b),grp="b"+i,bx=cx+lado*250,by=20+paso*(k+.5);
+  el("path",{d:`M${cx+lado*70},${cy} C${cx+lado*150},${cy} ${bx-lado*150},${by} ${bx-lado*78},${by}`,fill:"none",stroke:"var(--gold)","stroke-width":3,class:"mm-edge","data-g":grp},gE);
+  b[2].forEach((lf,j)=>{
+    const ly=by+(j-1)*36, lx=cx+lado*345;
+    el("path",{d:`M${bx+lado*78},${by} C${bx+lado*100},${by} ${lx-lado*20},${ly} ${lx},${ly}`,fill:"none",stroke:"var(--edge)","stroke-width":1.5,class:"mm-edge","data-g":grp},gE);
+    const a=link(gN,LEAFLINK[lf]||b[1]); a.setAttribute("class","mm-node");a.dataset.g=grp;
+    const w=lf.length*7+22, rx=lado>0?lx:lx-w;
+    el("rect",{x:rx,y:ly-14,width:w,height:28,rx:14,fill:"var(--leaf)",stroke:"var(--edge)","stroke-width":1},a);
+    label(a,rx+w/2,ly,[lf],{size:14});
+  });
+  const a=link(gN,b[1]);a.setAttribute("class","mm-node");a.dataset.g=grp;
+  el("rect",{x:bx-78,y:by-22,width:156,height:44,rx:8,fill:"var(--node)"},a);
+  label(a,bx,by,[b[0]],{size:16,weight:700,fill:"var(--node-fg)"});
+ });
+});
+const c=link(gN,"#inicio");c.setAttribute("class","mm-node");
+el("circle",{cx,cy,r:78,fill:"var(--surface)",stroke:"var(--gold)","stroke-width":3},c);
+label(c,cx,cy,["PFI","Reservas 1P","y regalías"],{size:19,weight:700,fill:"var(--head)"});
+const mm=document.getElementById("mm");
+svg.querySelectorAll(".mm-node").forEach(n=>{n.addEventListener("mouseenter",()=>{const g=n.dataset.g;if(!g)return;mm.classList.add("dim");svg.querySelectorAll(`[data-g="${g}"]`).forEach(x=>x.classList.add("hl"))});
+  n.addEventListener("mouseleave",()=>{mm.classList.remove("dim");svg.querySelectorAll(".hl").forEach(x=>x.classList.remove("hl"))})});
+
+/* ---------- Mapa conceptual ---------- */
+const X1=110,X2=380,X3=650,X4=920;
+const N={
+ excel:[515,40,["Excel ANH / MME (IRR 2024)"],"#datos"], prod:[X2,150,["Producción real","2023 – jun 2026"],"#datos"], res:[X3,150,["Reservas 1P, 2P, 3P","2024 – 2060"],"#datos"],
+ gkf:[X1,290,["Validación cruzada","agrupada por campo"],"#fuga"], conj:[X2,290,["Conjunto campo-año","y = cambio log"],"#preparacion"], vars:[X3,290,["Variables ex ante","(sin fuga)"],"#preparacion"], seg:[X4,290,["Segmentos","K-medias, k = 5"],"#segmentos"],
+ alert:[X1,430,["Umbral de alerta","cumplimiento < 1,00"],"#umbral"], mod:[X2,430,["Modelos: árboles,","lineal, red neuronal"],"#modelos"], met:[X3,430,["Métricas: WAPE,","sesgo, R², MAE"],"#metricas"], best:[X4,430,["Mejor modelo:","Random Forest"],"#modelos"],
+ app:[X1,570,["Aplicativo","local"],"#aplicativo"], pron:[X2,570,["Pronóstico 2026-2060","con tope 1P"],"#pronostico"], reg:[X3,570,["Regalías (bl)","Ley 756 de 2002"],"#regalias"], prec:[X4,570,["Precios","WTI · Brent"],"#datos"],
+ usd:[X4,690,["Regalías en USD"],"#regalias"]};
+const E=[["excel","prod","contiene"],["excel","res","contiene"],["prod","conj","se organiza en"],["res","vars","aportan"],["vars","conj","describen"],["vars","seg","perfilan"],
+ ["conj","mod","entrena"],["gkf","mod","valida"],["mod","met","se evalúan"],["met","best","eligen"],["best","pron","genera"],["pron","reg","× tasa"],
+ ["reg","usd","× precio"],["prec","usd","precio anual"],["pron","alert","cumplimiento vs 1P"],["pron","app","se consulta"],["usd","app","se muestra en"]];
+const cm=document.getElementById("cm-svg"),W=170,Hh=52;
+const defs=el("defs",{},cm);const mk=el("marker",{id:"arr",viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto-start-reverse"},defs);el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--stone)"},mk);
+const gEdges=el("g",{},cm),gLab=el("g",{},cm),gNodes=el("g",{},cm);
+function border(n,tx,ty){const[x,y]=n,dx=tx-x,dy=ty-y,hw=(n===N.excel?250:W)/2+4,hh=(n[2].length>1?Hh:36)/2+4;const s=Math.min(hw/Math.abs(dx||1e-6),hh/Math.abs(dy||1e-6));return[x+dx*s,y+dy*s]}
+E.forEach(([a,b,t,bend=0])=>{const A=N[a],B=N[b];let mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2;
+  const dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy),qx=mx-dy/L*bend*2,qy=my+dx/L*bend*2;
+  const[p1x,p1y]=border(A,bend?qx:B[0],bend?qy:B[1]),[p2x,p2y]=border(B,bend?qx:A[0],bend?qy:A[1]);
+  el("path",{d:bend?`M${p1x},${p1y} Q${qx},${qy} ${p2x},${p2y}`:`M${p1x},${p1y} L${p2x},${p2y}`,fill:"none",stroke:"var(--stone)","stroke-width":1.6,"marker-end":"url(#arr)"},gEdges);
+  const lx=bend?(p1x+2*qx+p2x)/4:(p1x+p2x)/2,ly=bend?(p1y+2*qy+p2y)/4:(p1y+p2y)/2;
+  const w=t.length*6.2+10;el("rect",{x:lx-w/2,y:ly-10,width:w,height:20,rx:3,fill:"var(--surface)"},gLab);label(gLab,lx,ly,[t],{size:12.5,fill:"var(--accent)",weight:600})});
+Object.values(N).forEach(n=>{const a=link(gNodes,n[3]);const h=n[2].length>1?Hh:36;const key=n[2][0];const Wn=n===N.excel?250:W;
+  const main=key.startsWith("Mejor")||key.startsWith("Pronóstico")||key.startsWith("Regalías");
+  el("rect",{x:n[0]-Wn/2,y:n[1]-h/2,width:Wn,height:h,rx:6,fill:main?"var(--node)":"var(--leaf)",stroke:main?"var(--node)":"var(--edge)","stroke-width":1.3},a);
+  label(a,n[0],n[1],n[2],{size:14.5,weight:700,fill:main?"var(--node-fg)":"var(--head)"})});
+
+/* ---------- Esquema GroupKFold ---------- */
+const gk=document.getElementById("gkf-svg");const cols=20;
+for(let f=0;f<5;f++){label(gk,40,26+f*38,["Pliegue "+(f+1)],{size:13,fill:"var(--muted)"});
+  for(let k=0;k<cols;k++){const val=Math.floor(k/4)===f;const x=80+k*27,y=12+f*38;
+    el("rect",{x,y,width:23,height:12,rx:2,fill:val?"var(--gold)":"var(--s1)",opacity:val?1:.75},gk);el("rect",{x,y:y+15,width:23,height:12,rx:2,fill:val?"var(--gold)":"var(--s1)",opacity:val?.75:.5},gk)}}
+label(gk,686,18,["2024"],{size:11,fill:"var(--muted)",anchor:"end"});label(gk,686,33,["2025"],{size:11,fill:"var(--muted)",anchor:"end"});
+
+/* ---------- Barras WAPE ---------- */
+const M=[["Random Forest",.0958,.0845,1],["Gradient Boosting",.1029,.0967],["Árbol de decisión",.1120,.0852],["Persistencia (base)",.1188,.0814,0,1],["Persistencia × pendiente 1P (base)",.1263,.1406,0,1],
+ ["Regresión lineal Ridge",.1308,.0996],["Regresión lineal MCO",.1309,.0995],["Red neuronal MLP",.1338,.1061],["Reservas 1P tal cual (base)",.1649,.2536,0,1]];
+const bs=document.getElementById("bar-svg"),x0=260,xs=v=>x0+v*2200,rowH=44;
+[0,.05,.10,.15,.20,.25].forEach(v=>{el("line",{x1:xs(v),x2:xs(v),y1:10,y2:10+M.length*rowH,stroke:"var(--line)"},bs);label(bs,xs(v),M.length*rowH+24,[(v*100).toFixed(0)+" %"],{size:12,fill:"var(--muted)"})});
+M.forEach((m,i)=>{const y=14+i*rowH;label(bs,x0-10,y+15,[m[0]],{size:14,anchor:"end",weight:m[3]?700:400,fill:m[4]?"var(--muted)":"var(--fg)"});
+  el("rect",{x:x0,y,width:xs(m[1])-x0,height:14,fill:m[4]?"var(--stone)":"var(--s1)",opacity:m[4]?.55:1},bs);
+  el("rect",{x:x0,y:y+16,width:xs(m[2])-x0,height:14,fill:m[4]?"var(--stone)":"var(--gold)",opacity:m[4]?.4:1},bs);
+  label(bs,xs(m[1])+6,y+7,[(m[1]*100).toFixed(1).replace(".",",")+" %"],{size:12,anchor:"start",fill:"var(--muted)"});
+  label(bs,xs(m[2])+6,y+23,[(m[2]*100).toFixed(1).replace(".",",")+" %"],{size:12,anchor:"start",fill:"var(--muted)"});
+  if(m[3])el("rect",{x:4,y:y-4,width:892,height:38,rx:4,fill:"none",stroke:"var(--gold)","stroke-width":1.5},bs)});
+el("rect",{x:x0,y:M.length*rowH+36,width:14,height:10,fill:"var(--s1)"},bs);label(bs,x0+20,M.length*rowH+41,["Validación cruzada (decide)"],{size:13,anchor:"start"});
+el("rect",{x:x0+230,y:M.length*rowH+36,width:14,height:10,fill:"var(--gold)"},bs);label(bs,x0+250,M.length*rowH+41,["Prueba 2026 (confirma)"],{size:13,anchor:"start"});
+
+/* ---------- Curva de aprendizaje ---------- */
+const C=[[1,.2035,.1783,.1869],[2,.1823,.1686,.153],[3,.1696,.1651,.1405],[5,.1325,.1348,.1107],[8,.1146,.13,.1006],[10,.1086,.1291,.0939],[15,.0991,.1263,.0982],[21,.0918,.1278,.101],[30,.0833,.1323,.1069],[40,.076,.1363,.1129],[60,.0636,.143,.1196],[80,.0535,.1482,.126],[100,.0457,.1517,.1295],[150,.0318,.1561,.1387],[200,.0225,.1585,.151],[250,.0156,.1631,.1639],[300,.0107,.171,.1768],[350,.0076,.1822,.1898],[400,.0057,.1937,.2057]];
+const lc=document.getElementById("lc-svg"),L0=60,R0=700,T0=20,B0=270,X=e=>L0+(e/400)*(R0-L0),Y=v=>B0-(v/.22)*(B0-T0);
+[0,.05,.10,.15,.20].forEach(v=>{el("line",{x1:L0,x2:R0,y1:Y(v),y2:Y(v),stroke:"var(--line)"},lc);label(lc,L0-8,Y(v),[v.toFixed(2).replace(".",",")],{size:12,anchor:"end",fill:"var(--muted)"})});
+[0,100,200,300,400].forEach(e=>label(lc,X(e),B0+16,[String(e)],{size:12,fill:"var(--muted)"}));label(lc,(L0+R0)/2,B0+38,["época"],{size:13,fill:"var(--muted)"});
+el("line",{x1:X(21),x2:X(21),y1:T0,y2:B0,stroke:"var(--fg)","stroke-dasharray":"3 4",opacity:.6},lc);label(lc,X(21)+6,T0+8,["mejor época: 21"],{size:12,anchor:"start",fill:"var(--muted)"});
+[[1,"var(--s1)","Entrenamiento",""],[2,"var(--stone)","Validación","6 5"],[3,"var(--gold)","Prueba 2026",""]].forEach(([k,col,name,dash],i)=>{
+  el("path",{d:C.map((r,j)=>(j?"L":"M")+X(r[0])+","+Y(r[k])).join(" "),fill:"none",stroke:col,"stroke-width":k===2?2:2.8,"stroke-dasharray":dash},lc);
+  const last=C[C.length-1];label(lc,R0-4,Y(last[k])+(k===1?-12:k===2?12:-12),[name],{size:13,anchor:"end",fill:col,weight:700})});
+
+/* ---------- Índice activo ---------- */
+const links=[...document.querySelectorAll("nav.toc a")];const map=new Map(links.map(a=>[a.getAttribute("href").slice(1),a]));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove("on"));const a=map.get(e.target.id);if(a)a.classList.add("on")}})},{rootMargin:"-30% 0px -60% 0px"});
+document.querySelectorAll("section[id], [id=arboles],[id=lineal],[id=red],[id=curva],[id=umbral]").forEach(s=>io.observe(s));
+})();
+</script>
+</body></html>

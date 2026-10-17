@@ -1,0 +1,17 @@
+,tipo,faltantes,% faltantes
+CAMPO,str,0,0.0
+Cod. Dane Departamento,float64,75,19.2
+Departamento,str,75,19.2
+Cod. Dane Municipio,float64,75,19.2
+Municipio,str,75,19.2
+Operadora,str,75,19.2
+Tipo Contrato,str,75,19.2
+Producción Bls 2023,float64,36,9.2
+Producción Bls 2024,float64,37,9.5
+Producción Bls 2025,float64,45,11.5
+Producción Bls 2026,float64,78,20.0
+Reservas 1P (bl) 2024,float64,70,17.9
+Reservas 1P (bl) 2026,float64,70,17.9
+Reservas 1P (bl) 2030,float64,70,17.9
+Reservas 1P (bl) 2040,float64,70,17.9
+Reservas 1P (bl) 2060,float64,70,17.9
