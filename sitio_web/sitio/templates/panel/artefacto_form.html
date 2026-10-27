@@ -1,0 +1,75 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}{{ 'Editar artefacto' if a.id else 'Nuevo artefacto' }}{% endblock %}
+{% block panel %}
+<header class="panel-cabecera fila">
+  <h1>{{ 'Editar artefacto' if a.id else 'Subir artefacto' }}</h1>
+  {% if a.id %}<span>{{ p.estado(a) }} <a href="{{ url_for('publico.artefacto', slug=a.slug) }}" target="_blank" rel="noopener">Ver página ↗</a></span>{% endif %}
+</header>
+<form method="post" enctype="multipart/form-data" class="formulario formulario-dos" data-form-artefacto>
+  {{ p.csrf() }}
+  <div class="formulario-principal">
+    <div class="campo">
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" value="{{ v.titulo }}" maxlength="200" required class="campo-titulo">
+    </div>
+    <fieldset class="campo">
+      <legend>¿Qué tipo de artefacto es?</legend>
+      <div class="opciones-tipo">
+        {% for clave, nombre, ayuda in [
+            ('html', 'Página interactiva', 'Un archivo .html autocontenido (guías, tableros, visualizaciones, artefactos de Claude descargados). Se muestra dentro del sitio.'),
+            ('imagen', 'Imagen o figura', 'Gráficos, mapas, infografías o diagramas.'),
+            ('archivo', 'Archivo descargable', 'Cuadernos, código, datos, modelos o presentaciones.'),
+            ('enlace', 'Enlace externo', 'Una aplicación publicada en otro lugar: Streamlit, Power BI, Tableau, GitHub, un artefacto de Claude…')] %}
+        <label class="opcion">
+          <input type="radio" name="tipo" value="{{ clave }}"{% if v.tipo == clave %} checked{% endif %}>
+          <span><strong>{{ nombre }}</strong><span class="ayuda">{{ ayuda }}</span></span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    <div class="campo" data-solo-tipos="html imagen archivo">
+      <label for="archivo">Archivo</label>
+      {% if a.archivo %}{{ p.archivo_actual(a.nombre_original or a.archivo, url_for('publico.archivo', carpeta='artefactos', nombre=a.archivo)) }}{% endif %}
+      <input id="archivo" name="archivo" type="file">
+      <p class="ayuda">
+        <span data-solo-tipos="html">Formatos: {{ ext.html }}.</span>
+        <span data-solo-tipos="imagen">Formatos: {{ ext.imagen }}.</span>
+        <span data-solo-tipos="archivo">Formatos: {{ ext.archivo }}.</span>
+        {% if a.archivo %}Suba uno nuevo solo si quiere reemplazar el actual.{% endif %}
+      </p>
+    </div>
+    <div class="campo">
+      <label for="enlace"><span data-solo-tipos="enlace">Enlace del artefacto</span><span data-solo-tipos="html imagen archivo">Enlace relacionado <span class="ayuda">(opcional: repositorio, aplicativo en línea…)</span></span></label>
+      <input id="enlace" name="enlace" type="url" value="{{ v.enlace }}" placeholder="https://">
+    </div>
+    {{ p.editor('descripcion', v.descripcion, filas=10, etiqueta='Descripción') }}
+  </div>
+  <aside class="formulario-lateral">
+    <div class="campo">
+      <label for="miniatura">Miniatura <span class="ayuda">(opcional)</span></label>
+      {% if a.miniatura %}{{ p.archivo_actual('ver imagen', url_for('publico.archivo', carpeta='imagenes', nombre=a.miniatura), 'Quitar', 'quitar_miniatura') }}{% endif %}
+      <input id="miniatura" name="miniatura" type="file" accept="image/*">
+      <p class="ayuda">Imagen para la tarjeta del listado. Las figuras usan la propia imagen.</p>
+    </div>
+    <div class="campo">
+      <label for="etiquetas">Etiquetas</label>
+      <input id="etiquetas" name="etiquetas" value="{{ v.etiquetas }}" placeholder="machine learning, reservas">
+    </div>
+    <div class="campo">
+      <label class="casilla"><input type="checkbox" name="destacado" value="1"{% if v.destacado %} checked{% endif %}> Destacar en la página de inicio</label>
+      <label class="casilla"><input type="checkbox" name="publicado" value="1"{% if v.publicado %} checked{% endif %}> Visible en el sitio</label>
+    </div>
+    {% if a.id %}
+    <div class="campo">
+      <p class="ayuda">Dirección: <code>/artefactos/{{ a.slug }}</code></p>
+      <label class="casilla"><input type="checkbox" name="regenerar_slug" value="1"> Actualizar la dirección con el título</label>
+    </div>
+    {% endif %}
+    <div class="acciones"><button class="boton boton-ancho" type="submit">Guardar artefacto</button></div>
+  </aside>
+</form>
+{% if a.id %}
+<div class="zona-peligro">{{ p.borrar('panel.artefacto_borrar', a, '¿Borrar definitivamente este artefacto y su archivo?') }}</div>
+{% endif %}
+{% endblock %}

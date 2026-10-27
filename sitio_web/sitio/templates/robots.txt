@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /panel/
+Sitemap: {{ url_for('publico.sitemap', _external=true) }}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block titulo %}Documentos de interés · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}Informes, estudios, normativa y otros documentos de interés seleccionados por {{ perfil.nombre }}.{% endblock %}
+{% block contenido %}
+<div class="contenedor pagina">
+  <header class="pagina-cabecera">
+    <p class="antetitulo">Biblioteca</p>
+    <h1>Documentos de interés</h1>
+    <p class="pagina-subtitulo">Informes, estudios, normativa y lecturas recomendadas.</p>
+  </header>
+  <div class="filtros">
+    {% if categorias %}
+    <nav class="pestanas" aria-label="Categoría">
+      <a href="{{ url_for('publico.documentos', q=q or None) }}"{% if not categoria %} aria-current="page"{% endif %}>Todas</a>
+      {% for c in categorias %}
+      <a href="{{ url_for('publico.documentos', categoria=c, q=q or None) }}"{% if categoria == c %} aria-current="page"{% endif %}>{{ c }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+    {{ m.buscador('publico.documentos', q, {'categoria': categoria}, 'Buscar documentos…') }}
+  </div>
+  {% if pagina.items %}
+  <ul class="documentos">{% for d in pagina.items %}{{ m.fila_documento(d) }}{% endfor %}</ul>
+  {{ m.paginacion(pagina, 'publico.documentos') }}
+  {% else %}
+  {{ m.vacio('No hay documentos que coincidan con la búsqueda.' if (q or categoria) else 'Aún no hay documentos publicados.') }}
+  {% endif %}
+</div>
+{% endblock %}

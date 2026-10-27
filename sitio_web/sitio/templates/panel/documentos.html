@@ -1,0 +1,33 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}Documentos{% endblock %}
+{% block panel %}
+<header class="panel-cabecera fila">
+  <h1>Documentos de interés</h1>
+  <a class="boton" href="{{ url_for('panel.documento_form') }}">Subir documento</a>
+</header>
+{% if lista %}
+<div class="tabla-envoltura">
+<table class="tabla">
+  <thead><tr><th>Título</th><th>Categoría</th><th>Archivo</th><th>Estado</th><th><span class="visualmente-oculto">Acciones</span></th></tr></thead>
+  <tbody>
+  {% for d in lista %}
+  <tr>
+    <td><a href="{{ url_for('panel.documento_form', id=d.id) }}">{{ d.titulo }}</a>{% if d.autor %}<br><span class="meta">{{ d.autor }}{% if d.anio %}, {{ d.anio }}{% endif %}</span>{% endif %}</td>
+    <td>{{ d.categoria }}</td>
+    <td class="meta">{{ (d.extension|upper ~ ' · ' ~ d.tamano_legible) if d.archivo else ('Enlace' if d.enlace else '—') }}</td>
+    <td>{{ p.estado(d) }}</td>
+    <td class="acciones-fila">
+      <a href="{{ url_for('publico.documento', slug=d.slug) }}">Ver</a>
+      <a href="{{ url_for('panel.documento_form', id=d.id) }}">Editar</a>
+      {{ p.borrar('panel.documento_borrar', d, '¿Borrar definitivamente el documento «' ~ d.titulo ~ '» y su archivo?') }}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio"><p>Aún no hay documentos. <a href="{{ url_for('panel.documento_form') }}">Suba el primero</a>.</p></div>
+{% endif %}
+{% endblock %}

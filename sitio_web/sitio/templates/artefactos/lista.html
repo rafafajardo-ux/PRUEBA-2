@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block titulo %}Artefactos · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}Tableros, guías interactivas, figuras, cuadernos y aplicativos de {{ perfil.nombre }}.{% endblock %}
+{% block contenido %}
+<div class="contenedor pagina">
+  <header class="pagina-cabecera">
+    <p class="antetitulo">Trabajo práctico</p>
+    <h1>Artefactos</h1>
+    <p class="pagina-subtitulo">Páginas interactivas, figuras, cuadernos, modelos y aplicativos.</p>
+  </header>
+  <div class="filtros">
+    <nav class="pestanas" aria-label="Tipo de artefacto">
+      <a href="{{ url_for('publico.artefactos', q=q or None) }}"{% if not tipo %} aria-current="page"{% endif %}>Todos</a>
+      {% for clave, nombre in {'html': 'Interactivos', 'imagen': 'Figuras', 'archivo': 'Archivos', 'enlace': 'Enlaces'}.items() %}
+      <a href="{{ url_for('publico.artefactos', tipo=clave, q=q or None) }}"{% if tipo == clave %} aria-current="page"{% endif %}>{{ nombre }}</a>
+      {% endfor %}
+    </nav>
+    {{ m.buscador('publico.artefactos', q, {'tipo': tipo, 'etiqueta': etiqueta}, 'Buscar artefactos…') }}
+  </div>
+  {% if etiqueta %}<p class="filtro-activo">Etiqueta <strong>#{{ etiqueta }}</strong> · <a href="{{ url_for('publico.artefactos', tipo=tipo or None) }}">quitar filtro</a></p>{% endif %}
+  {% if pagina.items %}
+  <div class="rejilla">{% for a in pagina.items %}{{ m.tarjeta_artefacto(a) }}{% endfor %}</div>
+  {{ m.paginacion(pagina, 'publico.artefactos') }}
+  {% else %}
+  {{ m.vacio('No hay artefactos que coincidan con la búsqueda.' if (q or etiqueta) else 'Aún no hay artefactos publicados.') }}
+  {% endif %}
+</div>
+{% endblock %}

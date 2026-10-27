@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Sobre mí · {{ perfil.nombre }}{% endblock %}
+{% block contenido %}
+<div class="contenedor contenedor-lectura pagina">
+  <header class="pagina-cabecera{% if perfil.foto %} con-foto{% endif %}">
+    {% if perfil.foto %}
+    <img class="perfil-foto" src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=perfil.foto) }}" alt="Fotografía de {{ perfil.nombre }}">
+    {% endif %}
+    <div>
+      <p class="antetitulo">Sobre mí</p>
+      <h1>{{ perfil.nombre }}</h1>
+      {% if perfil.titular %}<p class="pagina-subtitulo">{{ perfil.titular }}</p>{% endif %}
+      {% if perfil.ubicacion %}<p class="meta">{{ perfil.ubicacion }}</p>{% endif %}
+    </div>
+  </header>
+  <div class="prosa">
+    {% if perfil.biografia %}{{ perfil.biografia|markdown }}{% else %}<p>{{ perfil.presentacion }}</p>{% endif %}
+  </div>
+  {% if perfil.correo or perfil.linkedin or perfil.x or perfil.github %}
+  <section class="contacto">
+    <h2>Contacto</h2>
+    <ul class="contacto-lista">
+      {% if perfil.correo %}<li><span>Correo</span><a href="mailto:{{ perfil.correo }}">{{ perfil.correo }}</a></li>{% endif %}
+      {% if perfil.linkedin %}<li><span>LinkedIn</span><a href="{{ perfil.linkedin }}" rel="me noopener" target="_blank">{{ perfil.linkedin|replace('https://', '')|replace('www.', '') }}</a></li>{% endif %}
+      {% if perfil.x %}<li><span>X</span><a href="{{ perfil.x }}" rel="me noopener" target="_blank">{{ perfil.x|replace('https://', '') }}</a></li>{% endif %}
+      {% if perfil.github %}<li><span>GitHub</span><a href="{{ perfil.github }}" rel="me noopener" target="_blank">{{ perfil.github|replace('https://', '') }}</a></li>{% endif %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

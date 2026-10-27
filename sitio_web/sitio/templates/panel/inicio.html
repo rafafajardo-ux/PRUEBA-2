@@ -1,0 +1,35 @@
+{% extends "panel/base_panel.html" %}
+{% block titulo_panel %}Resumen{% endblock %}
+{% block panel %}
+<header class="panel-cabecera">
+  <h1>Hola, {{ perfil.nombre.split(' ')[0] }}</h1>
+  <p class="pagina-subtitulo">¿Qué quiere publicar hoy?</p>
+</header>
+<div class="tablero">
+  {% for clave, titulo, nuevo, texto in [
+      ('articulos', 'Artículos', 'panel.articulo_form', 'Escribir artículo'),
+      ('artefactos', 'Artefactos', 'panel.artefacto_form', 'Subir artefacto'),
+      ('documentos', 'Documentos', 'panel.documento_form', 'Subir documento')] %}
+  <section class="cifra">
+    <h2>{{ titulo }}</h2>
+    <p class="cifra-valor">{{ resumen[clave][0] }}</p>
+    <p class="cifra-nota">publicados{% if resumen[clave][1] %} · {{ resumen[clave][1] }} sin publicar{% endif %}</p>
+    <p class="cifra-acciones">
+      <a class="boton boton-pequeno" href="{{ url_for(nuevo) }}">{{ texto }}</a>
+      <a class="enlace-suave" href="{{ url_for('panel.' ~ clave) }}">Ver todos</a>
+    </p>
+  </section>
+  {% endfor %}
+</div>
+{% if recientes %}
+<section class="panel-bloque">
+  <h2>Artículos editados recientemente</h2>
+  <ul class="lista-simple">
+    {% for a in recientes %}
+    <li><a href="{{ url_for('panel.articulo_form', id=a.id) }}">{{ a.titulo }}</a>
+      <span class="meta">{{ a.tipo_nombre }} · {{ 'publicado' if a.publicado else 'borrador' }} · {{ a.actualizado|fecha(corto=true) }}</span></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}{{ 'Editar documento' if d.id else 'Nuevo documento' }}{% endblock %}
+{% block panel %}
+<header class="panel-cabecera fila">
+  <h1>{{ 'Editar documento' if d.id else 'Subir documento' }}</h1>
+  {% if d.id %}<span>{{ p.estado(d) }} <a href="{{ url_for('publico.documento', slug=d.slug) }}" target="_blank" rel="noopener">Ver página ↗</a></span>{% endif %}
+</header>
+<form method="post" enctype="multipart/form-data" class="formulario formulario-dos">
+  {{ p.csrf() }}
+  <div class="formulario-principal">
+    <div class="campo">
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" value="{{ v.titulo }}" maxlength="200" required class="campo-titulo">
+    </div>
+    <div class="campo">
+      <label for="archivo">Archivo</label>
+      {% if d.archivo %}{{ p.archivo_actual(d.nombre_original or d.archivo, url_for('publico.descargar_documento', slug=d.slug), 'Quitar archivo', 'quitar_archivo') }}{% endif %}
+      <input id="archivo" name="archivo" type="file">
+      <p class="ayuda">Formatos: {{ ext }}. Los PDF se pueden leer dentro del sitio.</p>
+    </div>
+    <div class="campo">
+      <label for="enlace">Enlace a la fuente original <span class="ayuda">(opcional si sube el archivo)</span></label>
+      <input id="enlace" name="enlace" type="url" value="{{ v.enlace }}" placeholder="https://">
+    </div>
+    {{ p.editor('descripcion', v.descripcion, filas=8, imagenes=false, etiqueta='Descripción o comentario') }}
+  </div>
+  <aside class="formulario-lateral">
+    <div class="campo">
+      <label for="categoria">Categoría</label>
+      <input id="categoria" name="categoria" value="{{ v.categoria }}" list="lista-categorias">
+      <datalist id="lista-categorias">{% for c in categorias %}<option value="{{ c }}">{% endfor %}</datalist>
+    </div>
+    <div class="campo">
+      <label for="autor">Autor o fuente</label>
+      <input id="autor" name="autor" value="{{ v.autor }}" placeholder="ANH, DNP, Banco de la República…">
+    </div>
+    <div class="campo">
+      <label for="anio">Año</label>
+      <input id="anio" name="anio" value="{{ v.anio }}" inputmode="numeric" maxlength="4" placeholder="2026">
+    </div>
+    <div class="campo">
+      <label for="etiquetas">Etiquetas</label>
+      <input id="etiquetas" name="etiquetas" value="{{ v.etiquetas }}">
+    </div>
+    <div class="campo"><label class="casilla"><input type="checkbox" name="publicado" value="1"{% if v.publicado %} checked{% endif %}> Visible en el sitio</label></div>
+    {% if d.id %}
+    <div class="campo">
+      <p class="ayuda">Dirección: <code>/documentos/{{ d.slug }}</code></p>
+      <label class="casilla"><input type="checkbox" name="regenerar_slug" value="1"> Actualizar la dirección con el título</label>
+    </div>
+    {% endif %}
+    <div class="acciones"><button class="boton boton-ancho" type="submit">Guardar documento</button></div>
+  </aside>
+</form>
+{% if d.id %}
+<div class="zona-peligro">{{ p.borrar('panel.documento_borrar', d, '¿Borrar definitivamente este documento y su archivo?') }}</div>
+{% endif %}
+{% endblock %}

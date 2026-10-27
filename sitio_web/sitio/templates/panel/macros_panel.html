@@ -1,0 +1,50 @@
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
+
+{% macro editor(nombre, valor, filas=18, imagenes=true, etiqueta='Contenido') %}
+<div class="campo editor" data-editor data-url-previa="{{ url_for('panel.vista_previa') }}" data-url-imagenes="{{ url_for('panel.subir_imagen') }}">
+  <div class="editor-barra">
+    <label for="{{ nombre }}">{{ etiqueta }} <span class="ayuda">(formato Markdown)</span></label>
+    <div class="editor-pestanas" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-modo="escribir">Escribir</button>
+      <button type="button" role="tab" aria-selected="false" data-modo="previa">Vista previa</button>
+    </div>
+  </div>
+  {% if imagenes %}
+  <div class="editor-herramientas">
+    <button type="button" class="boton boton-pequeno boton-borde" data-insertar-imagen>Insertar imagen</button>
+    <input type="file" accept="image/*" hidden data-archivo-imagen>
+    <span class="ayuda" data-estado-imagen></span>
+  </div>
+  {% endif %}
+  <textarea id="{{ nombre }}" name="{{ nombre }}" rows="{{ filas }}" data-editor-texto>{{ valor }}</textarea>
+  <div class="prosa editor-previa" data-editor-previa hidden></div>
+  <details class="guia-formato">
+    <summary>Guía rápida de formato</summary>
+    <table>
+      <tr><td><code>## Subtítulo</code></td><td>Subtítulo de sección (<code>###</code> para uno menor)</td></tr>
+      <tr><td><code>**negrita**</code> · <code>*cursiva*</code></td><td>Énfasis</td></tr>
+      <tr><td><code>[texto](https://…)</code></td><td>Enlace</td></tr>
+      <tr><td><code>- elemento</code> · <code>1. elemento</code></td><td>Listas</td></tr>
+      <tr><td><code>&gt; cita</code></td><td>Cita destacada</td></tr>
+      <tr><td><code>| A | B |</code> + <code>|---|---|</code></td><td>Tabla</td></tr>
+      <tr><td><code>Texto[^1]</code> y <code>[^1]: Fuente</code></td><td>Nota al pie</td></tr>
+      <tr><td><code>![descripción](url)</code></td><td>Imagen (use «Insertar imagen»)</td></tr>
+    </table>
+  </details>
+</div>
+{% endmacro %}
+
+{% macro estado(obj) %}
+{% if obj.publicado %}<span class="estado estado-publicado">Publicado</span>{% else %}<span class="estado estado-borrador">{{ 'Borrador' if obj.fecha_publicacion is defined else 'Oculto' }}</span>{% endif %}
+{% endmacro %}
+
+{% macro borrar(endpoint, obj, texto) %}
+<form method="post" action="{{ url_for(endpoint, id=obj.id) }}" data-confirmar="{{ texto }}">
+  {{ csrf() }}<button type="submit" class="enlace-boton peligro">Borrar</button>
+</form>
+{% endmacro %}
+
+{% macro archivo_actual(nombre, url, etiqueta_quitar=None, campo_quitar=None) %}
+<p class="archivo-actual">Actual: <a href="{{ url }}" target="_blank" rel="noopener">{{ nombre }}</a>
+  {% if campo_quitar %}<label class="casilla"><input type="checkbox" name="{{ campo_quitar }}" value="1"> {{ etiqueta_quitar }}</label>{% endif %}</p>
+{% endmacro %}

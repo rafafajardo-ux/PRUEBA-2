@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block titulo %}{{ d.titulo }} · Documentos · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}{{ (d.descripcion|markdown|striptags|truncate(180)) or d.categoria }}{% endblock %}
+{% block contenido %}
+{% if not d.publicado %}
+<div class="banda-borrador"><div class="contenedor">Sin publicar: solo usted puede ver esta página. <a href="{{ url_for('panel.documento_form', id=d.id) }}">Editar</a></div></div>
+{% endif %}
+<div class="contenedor pagina documento-detalle">
+  <header class="pagina-cabecera">
+    <p class="migas"><a href="{{ url_for('publico.documentos') }}">Documentos</a>{% if d.categoria %} / <a href="{{ url_for('publico.documentos', categoria=d.categoria) }}">{{ d.categoria }}</a>{% endif %}</p>
+    <h1>{{ d.titulo }}</h1>
+    <dl class="ficha">
+      {% if d.autor %}<div><dt>Autor o fuente</dt><dd>{{ d.autor }}</dd></div>{% endif %}
+      {% if d.anio %}<div><dt>Año</dt><dd>{{ d.anio }}</dd></div>{% endif %}
+      {% if d.archivo %}<div><dt>Archivo</dt><dd>{{ d.extension|upper }} · {{ d.tamano_legible }}</dd></div>{% endif %}
+      <div><dt>Publicado aquí</dt><dd>{{ d.creado|fecha }}</dd></div>
+    </dl>
+  </header>
+  <div class="artefacto-acciones">
+    {% if d.archivo %}<a class="boton" href="{{ url_for('publico.descargar_documento', slug=d.slug) }}">Descargar {{ d.extension|upper }}</a>{% endif %}
+    {% if d.enlace %}<a class="boton boton-borde" href="{{ d.enlace }}" target="_blank" rel="noopener">Ver en la fuente original ↗</a>{% endif %}
+    {% if current_user.is_authenticated %}<a class="boton boton-borde" href="{{ url_for('panel.documento_form', id=d.id) }}">Editar</a>{% endif %}
+  </div>
+  {% if d.descripcion %}<div class="prosa contenedor-lectura">{{ d.descripcion|markdown }}</div>{% endif %}
+  {% if d.archivo and d.es_pdf %}
+  <iframe class="artefacto-marco" src="{{ url_for('publico.archivo', carpeta='documentos', nombre=d.archivo) }}" title="{{ d.titulo }}" loading="lazy"></iframe>
+  {% endif %}
+  <div class="contenedor-lectura">{{ m.etiquetas(d.lista_etiquetas, 'publico.documentos') }}</div>
+</div>
+{% endblock %}

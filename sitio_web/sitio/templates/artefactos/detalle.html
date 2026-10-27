@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block titulo %}{{ a.titulo }} · Artefactos · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}{{ (a.descripcion|markdown|striptags|truncate(180)) or a.tipo_nombre }}{% endblock %}
+{% block contenido %}
+{% if not a.publicado %}
+<div class="banda-borrador"><div class="contenedor">Sin publicar: solo usted puede ver esta página. <a href="{{ url_for('panel.artefacto_form', id=a.id) }}">Editar</a></div></div>
+{% endif %}
+{% set url_archivo = url_for('publico.archivo', carpeta='artefactos', nombre=a.archivo) if a.archivo else None %}
+<div class="contenedor pagina artefacto">
+  <header class="pagina-cabecera">
+    <p class="migas"><a href="{{ url_for('publico.artefactos') }}">Artefactos</a> / <a href="{{ url_for('publico.artefactos', tipo=a.tipo) }}">{{ a.tipo_nombre }}</a></p>
+    <h1>{{ a.titulo }}</h1>
+    <p class="articulo-meta">
+      <span class="chip chip-artefacto">{{ a.tipo_nombre }}</span>
+      <time datetime="{{ a.creado.date().isoformat() }}">{{ a.creado|fecha }}</time>
+      {% if a.nombre_original %}<span>{{ a.nombre_original }}{% if a.tamano %} · {{ a.tamano_legible }}{% endif %}</span>{% endif %}
+      {% if current_user.is_authenticated %}<a href="{{ url_for('panel.artefacto_form', id=a.id) }}">Editar</a>{% endif %}
+    </p>
+  </header>
+
+  <div class="artefacto-acciones">
+    {% if a.tipo == 'enlace' %}
+    <a class="boton" href="{{ a.enlace }}" target="_blank" rel="noopener">Abrir el artefacto ↗</a>
+    {% else %}
+      {% if a.tipo in ('html', 'imagen') %}<a class="boton" href="{{ url_archivo }}" target="_blank" rel="noopener">Ver en pantalla completa ↗</a>{% endif %}
+      <a class="boton boton-borde" href="{{ url_for('publico.descargar_artefacto', slug=a.slug) }}">Descargar{% if a.extension %} .{{ a.extension }}{% endif %}</a>
+      {% if a.enlace %}<a class="boton boton-borde" href="{{ a.enlace }}" target="_blank" rel="noopener">Enlace relacionado ↗</a>{% endif %}
+    {% endif %}
+  </div>
+
+  {% if a.tipo == 'html' %}
+  <iframe class="artefacto-marco" src="{{ url_archivo }}" title="{{ a.titulo }}" loading="lazy"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals allow-downloads"></iframe>
+  {% elif a.tipo == 'imagen' %}
+  <figure class="artefacto-figura"><a href="{{ url_archivo }}" target="_blank" rel="noopener"><img src="{{ url_archivo }}" alt="{{ a.titulo }}"></a></figure>
+  {% elif a.tipo == 'archivo' and a.extension == 'pdf' %}
+  <iframe class="artefacto-marco" src="{{ url_archivo }}" title="{{ a.titulo }}" loading="lazy"></iframe>
+  {% elif a.miniatura %}
+  <figure class="artefacto-figura"><img src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=a.miniatura) }}" alt=""></figure>
+  {% endif %}
+
+  {% if a.descripcion %}<div class="prosa contenedor-lectura artefacto-descripcion">{{ a.descripcion|markdown }}</div>{% endif %}
+  <div class="contenedor-lectura">{{ m.etiquetas(a.lista_etiquetas, 'publico.artefactos') }}</div>
+</div>
+{% endblock %}

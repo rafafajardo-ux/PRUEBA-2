@@ -1,0 +1,96 @@
+{% macro chip_tipo(a) -%}
+<span class="chip chip-{{ a.tipo }}">{{ a.tipo_nombre }}</span>
+{%- endmacro %}
+
+{% macro borrador(obj) -%}
+{% if not obj.publicado %}<span class="chip chip-borrador">Sin publicar</span>{% endif %}
+{%- endmacro %}
+
+{% macro tarjeta_articulo(a) %}
+<article class="tarjeta tarjeta-articulo">
+  {% if a.portada %}
+  <a class="tarjeta-imagen" href="{{ url_for('publico.articulo', slug=a.slug) }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=a.portada) }}" alt="" loading="lazy">
+  </a>
+  {% endif %}
+  <div class="tarjeta-cuerpo">
+    <p class="tarjeta-meta">{{ chip_tipo(a) }} {{ borrador(a) }}
+      <span>{{ (a.fecha_publicacion or a.creado)|fecha(corto=true) }} · {{ a.minutos_lectura }} min de lectura</span></p>
+    <h3 class="tarjeta-titulo"><a href="{{ url_for('publico.articulo', slug=a.slug) }}">{{ a.titulo }}</a></h3>
+    <p class="tarjeta-texto">{{ a.extracto }}</p>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro tarjeta_artefacto(a) %}
+<article class="tarjeta tarjeta-artefacto">
+  <a class="tarjeta-imagen" href="{{ url_for('publico.artefacto', slug=a.slug) }}" tabindex="-1" aria-hidden="true">
+    {% set img = a.imagen_tarjeta %}
+    {% if img %}
+    <img src="{{ url_for('publico.archivo', carpeta=img[0], nombre=img[1]) }}" alt="" loading="lazy">
+    {% else %}
+    <span class="tarjeta-sello sello-{{ a.tipo }}">{{ 'Enlace' if a.tipo == 'enlace' else (a.extension|upper or a.tipo_nombre) }}</span>
+    {% endif %}
+  </a>
+  <div class="tarjeta-cuerpo">
+    <p class="tarjeta-meta"><span class="chip chip-artefacto">{{ a.tipo_nombre }}</span> {{ borrador(a) }}
+      {% if a.destacado %}<span class="chip chip-destacado">Destacado</span>{% endif %}</p>
+    <h3 class="tarjeta-titulo"><a href="{{ url_for('publico.artefacto', slug=a.slug) }}">{{ a.titulo }}</a></h3>
+    {% if a.descripcion %}<p class="tarjeta-texto">{{ a.descripcion|markdown|striptags|truncate(180) }}</p>{% endif %}
+  </div>
+</article>
+{% endmacro %}
+
+{% macro fila_documento(d) %}
+<li class="documento">
+  <span class="documento-ext" aria-hidden="true">{{ d.extension|upper if d.archivo else 'WEB' }}</span>
+  <div class="documento-info">
+    <h3 class="documento-titulo"><a href="{{ url_for('publico.documento', slug=d.slug) }}">{{ d.titulo }}</a> {{ borrador(d) }}</h3>
+    <p class="documento-meta">
+      {% if d.categoria %}<span>{{ d.categoria }}</span>{% endif %}
+      {% if d.autor %}<span>{{ d.autor }}</span>{% endif %}
+      {% if d.anio %}<span>{{ d.anio }}</span>{% endif %}
+      {% if d.tamano %}<span>{{ d.tamano_legible }}</span>{% endif %}
+    </p>
+  </div>
+  <div class="documento-acciones">
+    {% if d.archivo %}
+    <a class="boton boton-pequeno boton-borde" href="{{ url_for('publico.descargar_documento', slug=d.slug) }}">Descargar</a>
+    {% elif d.enlace %}
+    <a class="boton boton-pequeno boton-borde" href="{{ d.enlace }}" target="_blank" rel="noopener">Abrir enlace</a>
+    {% endif %}
+  </div>
+</li>
+{% endmacro %}
+
+{% macro etiquetas(lista, endpoint) %}
+{% if lista %}
+<ul class="etiquetas" aria-label="Etiquetas">
+  {% for e in lista %}<li><a href="{{ url_for(endpoint, etiqueta=e) }}">#{{ e }}</a></li>{% endfor %}
+</ul>
+{% endif %}
+{% endmacro %}
+
+{% macro paginacion(pagina, endpoint) %}
+{% if pagina.pages > 1 %}
+<nav class="paginacion" aria-label="Paginación">
+  {% set args = request.args.to_dict() %}
+  {% if pagina.has_prev %}<a href="{{ url_for(endpoint, **dict(args, pagina=pagina.prev_num)) }}" rel="prev">← Anteriores</a>{% else %}<span></span>{% endif %}
+  <span class="paginacion-estado">Página {{ pagina.page }} de {{ pagina.pages }}</span>
+  {% if pagina.has_next %}<a href="{{ url_for(endpoint, **dict(args, pagina=pagina.next_num)) }}" rel="next">Siguientes →</a>{% else %}<span></span>{% endif %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro buscador(endpoint, q, ocultos={}, texto='Buscar…') %}
+<form class="buscador" method="get" action="{{ url_for(endpoint) }}" role="search">
+  {% for k, val in ocultos.items() if val %}<input type="hidden" name="{{ k }}" value="{{ val }}">{% endfor %}
+  <label class="visualmente-oculto" for="q-{{ endpoint }}">{{ texto }}</label>
+  <input id="q-{{ endpoint }}" type="search" name="q" value="{{ q }}" placeholder="{{ texto }}">
+  <button class="boton boton-pequeno" type="submit">Buscar</button>
+</form>
+{% endmacro %}
+
+{% macro vacio(texto) %}
+<div class="vacio"><p>{{ texto }}</p></div>
+{% endmacro %}

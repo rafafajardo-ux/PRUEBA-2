@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block titulo %}{{ a.titulo }} · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}{{ a.extracto }}{% endblock %}
+{% block social %}
+{{ super() }}
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ url_for('publico.articulo', slug=a.slug, _external=true) }}">
+{% if a.portada %}<meta property="og:image" content="{{ url_for('publico.archivo', carpeta='imagenes', nombre=a.portada, _external=true) }}">{% endif %}
+{% if a.fecha_publicacion %}<meta property="article:published_time" content="{{ a.fecha_publicacion.isoformat() }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if a.portada else 'summary' }}">
+{% endblock %}
+{% block contenido %}
+{% if not a.publicado %}
+<div class="banda-borrador"><div class="contenedor">Borrador: solo usted puede ver esta página. <a href="{{ url_for('panel.articulo_form', id=a.id) }}">Editar</a></div></div>
+{% endif %}
+<article class="contenedor contenedor-lectura pagina articulo">
+  <header class="articulo-cabecera">
+    <p class="migas"><a href="{{ url_for('publico.articulos') }}">Artículos</a> / <a href="{{ url_for('publico.articulos', tipo=a.tipo) }}">{{ a.tipo_nombre }}</a></p>
+    <h1>{{ a.titulo }}</h1>
+    {% if a.resumen %}<p class="articulo-resumen">{{ a.resumen }}</p>{% endif %}
+    <p class="articulo-meta">
+      {{ m.chip_tipo(a) }}
+      <span>Por {{ perfil.nombre }}</span>
+      {% if a.fecha_publicacion %}<time datetime="{{ a.fecha_publicacion.date().isoformat() }}">{{ a.fecha_publicacion|fecha }}</time>{% endif %}
+      <span>{{ a.minutos_lectura }} min de lectura</span>
+      {% if current_user.is_authenticated %}<a href="{{ url_for('panel.articulo_form', id=a.id) }}">Editar</a>{% endif %}
+    </p>
+  </header>
+  {% if a.portada %}
+  <figure class="articulo-portada"><img src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=a.portada) }}" alt=""></figure>
+  {% endif %}
+  <div class="prosa">{{ a.html }}</div>
+  <footer class="articulo-pie">
+    {{ m.etiquetas(a.lista_etiquetas, 'publico.articulos') }}
+    {% set url = url_for('publico.articulo', slug=a.slug, _external=true) %}
+    <p class="compartir">Compartir:
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url|urlencode }}" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/intent/post?url={{ url|urlencode }}&text={{ a.titulo|urlencode }}" target="_blank" rel="noopener">X</a>
+      <a href="https://wa.me/?text={{ (a.titulo ~ ' ' ~ url)|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+      <button class="enlace-boton" type="button" data-copiar="{{ url }}">Copiar enlace</button>
+    </p>
+    <aside class="autor">
+      {% if perfil.foto %}<img src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=perfil.foto) }}" alt="">{% endif %}
+      <div>
+        <p class="autor-nombre">{{ perfil.nombre }}</p>
+        <p>{{ perfil.presentacion }}</p>
+        <a href="{{ url_for('publico.sobre_mi') }}">Sobre mí →</a>
+      </div>
+    </aside>
+  </footer>
+</article>
+{% if relacionados %}
+<section class="seccion seccion-alterna">
+  <div class="contenedor">
+    <header class="seccion-cabecera"><h2>Más artículos de {{ a.tipo_nombre|lower }}</h2></header>
+    <div class="rejilla">{% for r in relacionados %}{{ m.tarjeta_articulo(r) }}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

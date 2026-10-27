@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block clase_body %}en-panel{% endblock %}
+{% block titulo %}{% block titulo_panel %}Panel{% endblock %} · {{ perfil.nombre }}{% endblock %}
+{% block cabeza %}<meta name="robots" content="noindex">{% endblock %}
+{% block contenido %}
+<div class="contenedor pagina panel">
+  <nav class="panel-menu" aria-label="Panel de administración">
+    {% for endpoint, etiqueta, activos in [
+        ('panel.inicio', 'Resumen', ['panel.inicio']),
+        ('panel.articulos', 'Artículos', ['panel.articulos', 'panel.articulo_form']),
+        ('panel.artefactos', 'Artefactos', ['panel.artefactos', 'panel.artefacto_form']),
+        ('panel.documentos', 'Documentos', ['panel.documentos', 'panel.documento_form']),
+        ('panel.perfil_form', 'Perfil', ['panel.perfil_form'])] %}
+    <a href="{{ url_for(endpoint) }}"{% if request.endpoint in activos %} aria-current="page"{% endif %}>{{ etiqueta }}</a>
+    {% endfor %}
+    <a class="panel-menu-sitio" href="{{ url_for('publico.inicio') }}">Ver el sitio ↗</a>
+  </nav>
+  {% block panel %}{% endblock %}
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/panel.js') }}" defer></script>{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso · {{ perfil.nombre }}{% endblock %}
+{% block cabeza %}<meta name="robots" content="noindex">{% endblock %}
+{% block contenido %}
+<div class="contenedor pagina">
+  <div class="tarjeta-acceso">
+    <h1>Acceso al panel</h1>
+    {% if hay_admin %}
+    <form method="post" class="formulario">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="campo"><label for="usuario">Usuario</label><input id="usuario" name="usuario" autocomplete="username" required autofocus></div>
+      <div class="campo"><label for="clave">Contraseña</label><input id="clave" name="clave" type="password" autocomplete="current-password" required></div>
+      <label class="casilla"><input type="checkbox" name="recordar" value="1"> Mantener la sesión iniciada en este equipo</label>
+      <button class="boton boton-ancho" type="submit">Entrar</button>
+    </form>
+    {% else %}
+    <p>Aún no existe un administrador. Créelo desde la consola del servidor:</p>
+    <pre><code>flask --app wsgi crear-admin</code></pre>
+    <p class="ayuda">O defina las variables <code>ADMIN_USUARIO</code> y <code>ADMIN_CLAVE</code> antes del primer arranque.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

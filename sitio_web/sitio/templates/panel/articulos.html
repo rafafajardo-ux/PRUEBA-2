@@ -1,0 +1,33 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}Artículos{% endblock %}
+{% block panel %}
+<header class="panel-cabecera fila">
+  <h1>Artículos</h1>
+  <a class="boton" href="{{ url_for('panel.articulo_form') }}">Escribir artículo</a>
+</header>
+{% if lista %}
+<div class="tabla-envoltura">
+<table class="tabla">
+  <thead><tr><th>Título</th><th>Tipo</th><th>Estado</th><th>Fecha</th><th><span class="visualmente-oculto">Acciones</span></th></tr></thead>
+  <tbody>
+  {% for a in lista %}
+  <tr>
+    <td><a href="{{ url_for('panel.articulo_form', id=a.id) }}">{{ a.titulo }}</a></td>
+    <td>{{ a.tipo_nombre }}</td>
+    <td>{{ p.estado(a) }}</td>
+    <td>{{ (a.fecha_publicacion or a.actualizado)|fecha(corto=true) }}</td>
+    <td class="acciones-fila">
+      <a href="{{ url_for('publico.articulo', slug=a.slug) }}">Ver</a>
+      <a href="{{ url_for('panel.articulo_form', id=a.id) }}">Editar</a>
+      {{ p.borrar('panel.articulo_borrar', a, '¿Borrar definitivamente el artículo «' ~ a.titulo ~ '»?') }}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio"><p>Aún no hay artículos. <a href="{{ url_for('panel.articulo_form') }}">Escriba el primero</a>.</p></div>
+{% endif %}
+{% endblock %}

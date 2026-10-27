@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% for endpoint in ['publico.inicio', 'publico.articulos', 'publico.artefactos', 'publico.documentos', 'publico.sobre_mi'] %}
+  <url><loc>{{ url_for(endpoint, _external=true) }}</loc></url>
+  {% endfor %}
+  {% for a in articulos %}<url><loc>{{ url_for('publico.articulo', slug=a.slug, _external=true) }}</loc><lastmod>{{ a.actualizado.date().isoformat() }}</lastmod></url>
+  {% endfor %}
+  {% for a in artefactos %}<url><loc>{{ url_for('publico.artefacto', slug=a.slug, _external=true) }}</loc><lastmod>{{ a.actualizado.date().isoformat() }}</lastmod></url>
+  {% endfor %}
+  {% for d in documentos %}<url><loc>{{ url_for('publico.documento', slug=d.slug, _external=true) }}</loc><lastmod>{{ d.actualizado.date().isoformat() }}</lastmod></url>
+  {% endfor %}
+</urlset>

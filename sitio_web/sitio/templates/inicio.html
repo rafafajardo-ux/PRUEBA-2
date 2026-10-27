@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block clase_body %}pagina-inicio{% endblock %}
+{% block contenido %}
+<section class="portada">
+  <div class="contenedor portada-rejilla{% if perfil.foto %} con-foto{% endif %}">
+    <div>
+      <p class="antetitulo">{{ perfil.titular }}</p>
+      <h1 class="portada-titulo">{{ perfil.nombre }}</h1>
+      <span class="regla" aria-hidden="true"></span>
+      <p class="portada-texto">{{ perfil.presentacion }}</p>
+      <p class="portada-acciones">
+        <a class="boton" href="{{ url_for('publico.articulos') }}">Leer artículos</a>
+        <a class="boton boton-claro" href="{{ url_for('publico.artefactos') }}">Explorar artefactos</a>
+      </p>
+    </div>
+    {% if perfil.foto %}
+    <img class="portada-foto" src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=perfil.foto) }}" alt="Fotografía de {{ perfil.nombre }}">
+    {% endif %}
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="contenedor">
+    <header class="seccion-cabecera">
+      <h2>Artículos recientes</h2>
+      <a class="ver-todo" href="{{ url_for('publico.articulos') }}">Todos los artículos →</a>
+    </header>
+    <p class="seccion-intro">Análisis y opinión: <a href="{{ url_for('publico.articulos', tipo='analisis') }}">análisis</a> ·
+      <a href="{{ url_for('publico.articulos', tipo='opinion') }}">opinión</a></p>
+    {% if articulos %}
+    <div class="rejilla">{% for a in articulos %}{{ m.tarjeta_articulo(a) }}{% endfor %}</div>
+    {% else %}{{ m.vacio('Pronto habrá artículos publicados aquí.') }}{% endif %}
+  </div>
+</section>
+
+<section class="seccion seccion-alterna">
+  <div class="contenedor">
+    <header class="seccion-cabecera">
+      <h2>Artefactos</h2>
+      <a class="ver-todo" href="{{ url_for('publico.artefactos') }}">Todos los artefactos →</a>
+    </header>
+    <p class="seccion-intro">Tableros, guías interactivas, figuras, cuadernos y aplicativos.</p>
+    {% if artefactos %}
+    <div class="rejilla">{% for a in artefactos %}{{ m.tarjeta_artefacto(a) }}{% endfor %}</div>
+    {% else %}{{ m.vacio('Pronto habrá artefactos publicados aquí.') }}{% endif %}
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="contenedor">
+    <header class="seccion-cabecera">
+      <h2>Documentos de interés</h2>
+      <a class="ver-todo" href="{{ url_for('publico.documentos') }}">Todos los documentos →</a>
+    </header>
+    {% if documentos %}
+    <ul class="documentos">{% for d in documentos %}{{ m.fila_documento(d) }}{% endfor %}</ul>
+    {% else %}{{ m.vacio('Pronto habrá documentos disponibles aquí.') }}{% endif %}
+  </div>
+</section>
+
+{% if perfil.biografia %}
+<section class="seccion seccion-oscura">
+  <div class="contenedor sobre-mi-resumen">
+    <h2>Sobre mí</h2>
+    <div class="prosa prosa-clara">{{ (perfil.biografia.split('\n\n')|first)|markdown }}</div>
+    <a class="boton boton-claro" href="{{ url_for('publico.sobre_mi') }}">Conocer más</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

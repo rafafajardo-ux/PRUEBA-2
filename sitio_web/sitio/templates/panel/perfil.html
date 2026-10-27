@@ -1,0 +1,43 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}Perfil{% endblock %}
+{% block panel %}
+<header class="panel-cabecera"><h1>Perfil y textos del sitio</h1>
+  <p class="pagina-subtitulo">Lo que aparece en la portada, en «Sobre mí» y en el pie de página.</p></header>
+<form method="post" enctype="multipart/form-data" class="formulario formulario-dos">
+  {{ p.csrf() }}
+  <div class="formulario-principal">
+    <div class="campo"><label for="nombre">Nombre</label><input id="nombre" name="nombre" value="{{ v.nombre }}" required></div>
+    <div class="campo"><label for="titular">Titular <span class="ayuda">(debajo del nombre)</span></label><input id="titular" name="titular" value="{{ v.titular }}"></div>
+    <div class="campo"><label for="presentacion">Presentación breve <span class="ayuda">(portada, pie y buscadores)</span></label>
+      <textarea id="presentacion" name="presentacion" rows="3">{{ v.presentacion }}</textarea></div>
+    {{ p.editor('biografia', v.biografia, filas=14, etiqueta='Biografía para «Sobre mí»') }}
+  </div>
+  <aside class="formulario-lateral">
+    <div class="campo">
+      <label for="foto">Fotografía</label>
+      {% if v.foto %}<img class="perfil-miniatura" src="{{ url_for('publico.archivo', carpeta='imagenes', nombre=v.foto) }}" alt="">
+      <label class="casilla"><input type="checkbox" name="quitar_foto" value="1"> Quitar fotografía</label>{% endif %}
+      <input id="foto" name="foto" type="file" accept="image/*">
+    </div>
+    <div class="campo"><label for="ubicacion">Ubicación</label><input id="ubicacion" name="ubicacion" value="{{ v.ubicacion }}" placeholder="Bogotá, Colombia"></div>
+    <div class="campo"><label for="correo">Correo de contacto</label><input id="correo" name="correo" type="email" value="{{ v.correo }}"></div>
+    <div class="campo"><label for="linkedin">LinkedIn</label><input id="linkedin" name="linkedin" type="url" value="{{ v.linkedin }}" placeholder="https://www.linkedin.com/in/…"></div>
+    <div class="campo"><label for="x">X (Twitter)</label><input id="x" name="x" type="url" value="{{ v.x }}" placeholder="https://x.com/…"></div>
+    <div class="campo"><label for="github">GitHub</label><input id="github" name="github" type="url" value="{{ v.github }}" placeholder="https://github.com/…"></div>
+    <div class="acciones"><button class="boton boton-ancho" type="submit">Guardar perfil</button></div>
+  </aside>
+</form>
+
+<section class="panel-bloque">
+  <h2>Cambiar contraseña</h2>
+  <form method="post" action="{{ url_for('panel.cambiar_clave') }}" class="formulario formulario-estrecho">
+    {{ p.csrf() }}
+    <input type="text" name="usuario" value="{{ current_user.usuario }}" autocomplete="username" hidden>
+    <div class="campo"><label for="clave_actual">Contraseña actual</label><input id="clave_actual" name="clave_actual" type="password" autocomplete="current-password" required></div>
+    <div class="campo"><label for="clave_nueva">Nueva contraseña <span class="ayuda">(mínimo 8 caracteres)</span></label><input id="clave_nueva" name="clave_nueva" type="password" autocomplete="new-password" minlength="8" required></div>
+    <div class="campo"><label for="clave_confirmacion">Repita la nueva contraseña</label><input id="clave_confirmacion" name="clave_confirmacion" type="password" autocomplete="new-password" required></div>
+    <button class="boton" type="submit">Cambiar contraseña</button>
+  </form>
+</section>
+{% endblock %}

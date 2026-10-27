@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}{{ codigo }} · {{ perfil.nombre }}{% endblock %}
+{% block contenido %}
+<div class="contenedor contenedor-lectura pagina error">
+  <p class="error-codigo">{{ codigo }}</p>
+  <h1>{{ mensaje }}</h1>
+  <p><a class="boton" href="{{ url_for('publico.inicio') }}">Volver al inicio</a></p>
+</div>
+{% endblock %}

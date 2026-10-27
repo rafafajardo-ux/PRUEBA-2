@@ -1,0 +1,59 @@
+{% extends "panel/base_panel.html" %}
+{% import "panel/macros_panel.html" as p with context %}
+{% block titulo_panel %}{{ 'Editar artículo' if a.id else 'Nuevo artículo' }}{% endblock %}
+{% block panel %}
+<header class="panel-cabecera fila">
+  <h1>{{ 'Editar artículo' if a.id else 'Nuevo artículo' }}</h1>
+  {% if a.id %}<span>{{ p.estado(a) }} <a href="{{ url_for('publico.articulo', slug=a.slug) }}" target="_blank" rel="noopener">Ver página ↗</a></span>{% endif %}
+</header>
+<form method="post" enctype="multipart/form-data" class="formulario formulario-dos">
+  {{ p.csrf() }}
+  <div class="formulario-principal">
+    <div class="campo">
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" value="{{ v.titulo }}" maxlength="200" required class="campo-titulo">
+    </div>
+    <div class="campo">
+      <label for="resumen">Resumen <span class="ayuda">(una o dos frases; se muestra en el listado y al compartir)</span></label>
+      <textarea id="resumen" name="resumen" rows="2" maxlength="400">{{ v.resumen }}</textarea>
+    </div>
+    {{ p.editor('contenido', v.contenido, filas=22) }}
+  </div>
+  <aside class="formulario-lateral">
+    <fieldset class="campo">
+      <legend>Tipo de artículo</legend>
+      {% for clave, nombre in tipos.items() %}
+      <label class="casilla"><input type="radio" name="tipo" value="{{ clave }}"{% if v.tipo == clave %} checked{% endif %}> {{ nombre }}</label>
+      {% endfor %}
+    </fieldset>
+    <div class="campo">
+      <label for="fecha">Fecha de publicación</label>
+      <input id="fecha" name="fecha" type="date" value="{{ v.fecha }}">
+      <p class="ayuda">Vacía = el día en que se publique. Útil para traer artículos antiguos con su fecha original.</p>
+    </div>
+    <div class="campo">
+      <label for="etiquetas">Etiquetas</label>
+      <input id="etiquetas" name="etiquetas" value="{{ v.etiquetas }}" placeholder="petróleo, regalías, datos">
+      <p class="ayuda">Separadas por comas.</p>
+    </div>
+    <div class="campo">
+      <label for="portada">Imagen de portada</label>
+      {% if a.portada %}{{ p.archivo_actual('ver imagen', url_for('publico.archivo', carpeta='imagenes', nombre=a.portada), 'Quitar', 'quitar_portada') }}{% endif %}
+      <input id="portada" name="portada" type="file" accept="image/*">
+    </div>
+    {% if a.id %}
+    <div class="campo">
+      <p class="ayuda">Dirección: <code>/articulos/{{ a.slug }}</code></p>
+      <label class="casilla"><input type="checkbox" name="regenerar_slug" value="1"> Actualizar la dirección con el título</label>
+    </div>
+    {% endif %}
+    <div class="acciones">
+      <button class="boton boton-ancho" type="submit" name="accion" value="publicar">{{ 'Guardar y mantener publicado' if a.publicado else 'Publicar' }}</button>
+      <button class="boton boton-borde boton-ancho" type="submit" name="accion" value="borrador">{{ 'Pasar a borrador' if a.publicado else 'Guardar borrador' }}</button>
+    </div>
+  </aside>
+</form>
+{% if a.id %}
+<div class="zona-peligro">{{ p.borrar('panel.articulo_borrar', a, '¿Borrar definitivamente este artículo?') }}</div>
+{% endif %}
+{% endblock %}

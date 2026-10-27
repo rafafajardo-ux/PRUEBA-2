@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>{{ perfil.nombre }} · Artículos</title>
+  <link>{{ url_for('publico.articulos', _external=true) }}</link>
+  <atom:link href="{{ url_for('publico.feed', _external=true) }}" rel="self" type="application/rss+xml"/>
+  <description>{{ perfil.presentacion }}</description>
+  <language>es</language>
+  {% for a in articulos %}
+  <item>
+    <title>{{ a.titulo }}</title>
+    <link>{{ url_for('publico.articulo', slug=a.slug, _external=true) }}</link>
+    <guid isPermaLink="true">{{ url_for('publico.articulo', slug=a.slug, _external=true) }}</guid>
+    <category>{{ a.tipo_nombre }}</category>
+    {% if a.fecha_publicacion %}<pubDate>{{ a.fecha_publicacion|rfc822 }}</pubDate>{% endif %}
+    <description>{{ a.html }}</description>
+  </item>
+  {% endfor %}
+</channel>
+</rss>
